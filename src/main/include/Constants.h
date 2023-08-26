@@ -15,11 +15,12 @@
 
 namespace CONSTANTS 
 {
-  enum STATE
+  enum class STATE
   {
   STOWED,
   INTAKE,
   EXTAKE,
+  MAN_INTAKE,
 
 };
   constexpr int XBOX_PORT = 0;

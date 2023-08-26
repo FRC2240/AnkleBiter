@@ -3,7 +3,7 @@
 // the WPILib BSD license file in the root directory of this project.
 
 #include "Robot.h"
-
+#include "Buttons.h"
 #include <fmt/core.h>
 #include <frc/smartdashboard/SmartDashboard.h>
 
@@ -57,11 +57,44 @@ void Robot::AutonomousPeriodic() {
 
 void Robot::TeleopInit() {}
 
-void Robot::TeleopPeriodic()
-{
-  switch m_state
+void Robot::TeleopPeriodic() {
+  if (BUTTON::STOWED())
   {
-
+    m_stowed_toggle = !m_stowed_toggle;
+    m_intake_toggle = 0;
+    m_man_intake_toggle = 0;
+    m_extake_toggle = 0;
+  }
+   if (BUTTON::INTAKE())
+  {
+    m_stowed_toggle = 0;
+    m_intake_toggle = !m_intake_toggle;
+    m_man_intake_toggle = 0;
+    m_extake_toggle = 0;
+  }
+   if (BUTTON::MAN_INTAKE())
+  {
+    m_stowed_toggle = 0;
+    m_intake_toggle = 0;
+    m_man_intake_toggle = !m_man_intake_toggle;
+    m_extake_toggle = 0;
+  }
+   if (BUTTON::MAN_INTAKE())
+  {
+    m_stowed_toggle = 0;
+    m_intake_toggle = 0;
+    m_man_intake_toggle = 0;
+    m_extake_toggle = !m_extake_toggle;
+  }
+  switch (m_state){ 
+    case CONSTANTS::STATE::STOWED:
+    break;
+    case CONSTANTS::STATE::INTAKE:
+    break;
+    case CONSTANTS::STATE::EXTAKE:
+    break;
+    case CONSTANTS::STATE::MAN_INTAKE:
+    break;
   }
 }
 
