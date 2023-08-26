@@ -15,6 +15,13 @@
 
 namespace CONSTANTS 
 {
+  enum STATE
+  {
+  STOWED,
+  INTAKE,
+  EXTAKE,
+
+};
   constexpr int XBOX_PORT = 0;
   constexpr int AUX_XBOX_PORT = 1;
   constexpr double NON_TURBO = 1;

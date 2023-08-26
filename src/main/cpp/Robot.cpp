@@ -57,7 +57,13 @@ void Robot::AutonomousPeriodic() {
 
 void Robot::TeleopInit() {}
 
-void Robot::TeleopPeriodic() {}
+void Robot::TeleopPeriodic()
+{
+  switch m_state
+  {
+
+  }
+}
 
 void Robot::DisabledInit() {}
 
