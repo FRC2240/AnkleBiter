@@ -20,6 +20,7 @@ namespace CONSTANTS
   STOWED,
   INTAKE,
   EXTAKE,
+  MAN_INTAKE,
 
 };
   constexpr int XBOX_PORT = 0;

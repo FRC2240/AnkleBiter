@@ -32,6 +32,10 @@ class Robot : public frc::TimedRobot {
   const std::string kAutoNameCustom = "My Auto";
   std::string m_autoSelected;
   CONSTANTS::STATE m_state = CONSTANTS::STATE::STOWED;
+  bool m_stowed_toggle = true;
+  bool m_intake_toggle = false;
+  bool m_extake_toggle = false;
+  bool m_man_intake_toggle = false;
   Arm m_arm;
   Roller m_roller;
 };

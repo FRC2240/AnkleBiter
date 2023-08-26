@@ -2,20 +2,25 @@
 #include <frc/XboxController.h>
 #include <frc/MathUtil.h>
 #include "Constants.h"
+#include "Robot.h"
 
 namespace BUTTON{
  
    frc::XboxController stick {0};
 
-    inline bool CONSTANTS::STATE::STOWED(){
+    inline bool STOWED(){
         return stick.GetBButtonReleased();
     }
 
-    inline bool CONSTANTS::STATE::INTAKE(){
+    inline bool INTAKE(){
         return stick.GetLeftBumperReleased();
     }
     
-    inline bool CONSTANTS::STATE::EXTAKE(){
+    inline bool EXTAKE(){
         return stick.GetRightBumperReleased();
+    }
+
+    inline bool MAN_INTAKE(){
+        return stick.GetXButtonReleased();
     }
 }

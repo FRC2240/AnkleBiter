@@ -58,12 +58,42 @@ void Robot::AutonomousPeriodic() {
 void Robot::TeleopInit() {}
 
 void Robot::TeleopPeriodic() {
+  if (BUTTON::STOWED())
+  {
+    m_stowed_toggle = !m_stowed_toggle;
+    m_intake_toggle = 0;
+    m_man_intake_toggle = 0;
+    m_extake_toggle = 0;
+  }
+   if (BUTTON::INTAKE())
+  {
+    m_stowed_toggle = 0;
+    m_intake_toggle = !m_intake_toggle;
+    m_man_intake_toggle = 0;
+    m_extake_toggle = 0;
+  }
+   if (BUTTON::MAN_INTAKE())
+  {
+    m_stowed_toggle = 0;
+    m_intake_toggle = 0;
+    m_man_intake_toggle = !m_man_intake_toggle;
+    m_extake_toggle = 0;
+  }
+   if (BUTTON::MAN_INTAKE())
+  {
+    m_stowed_toggle = 0;
+    m_intake_toggle = 0;
+    m_man_intake_toggle = 0;
+    m_extake_toggle = !m_extake_toggle;
+  }
   switch (m_state){ 
     case CONSTANTS::STATE::STOWED:
     break;
     case CONSTANTS::STATE::INTAKE:
     break;
     case CONSTANTS::STATE::EXTAKE:
+    break;
+    case CONSTANTS::STATE::MAN_INTAKE:
     break;
   }
 }
