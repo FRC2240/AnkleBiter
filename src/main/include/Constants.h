@@ -15,7 +15,7 @@
 
 namespace CONSTANTS 
 {
-  enum STATE
+  enum class STATE
   {
   STOWED,
   INTAKE,

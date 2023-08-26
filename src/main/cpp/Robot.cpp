@@ -3,7 +3,7 @@
 // the WPILib BSD license file in the root directory of this project.
 
 #include "Robot.h"
-
+#include "Buttons.h"
 #include <fmt/core.h>
 #include <frc/smartdashboard/SmartDashboard.h>
 
@@ -57,11 +57,14 @@ void Robot::AutonomousPeriodic() {
 
 void Robot::TeleopInit() {}
 
-void Robot::TeleopPeriodic()
-{
-  switch m_state
-  {
-
+void Robot::TeleopPeriodic() {
+  switch (m_state){ 
+    case CONSTANTS::STATE::STOWED:
+    break;
+    case CONSTANTS::STATE::INTAKE:
+    break;
+    case CONSTANTS::STATE::EXTAKE:
+    break;
   }
 }
 
