@@ -37,5 +37,5 @@ class Robot : public frc::TimedRobot {
   bool m_extake_toggle = false;
   bool m_man_intake_toggle = false;
   Arm m_arm;
-  Roller m_roller;
+  Roller m_roller {m_state};
 };

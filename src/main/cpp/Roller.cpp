@@ -1,6 +1,7 @@
 #include "Roller.h"
 
-Roller::Roller(/* args */)
+Roller::Roller(CONSTANTS::STATE &state)
+: m_state {state}
 {
     m_right_roller_motor.Follow(m_left_roller_motor);
 
@@ -17,6 +18,9 @@ void Roller::spin(double speed)
 
 bool Roller::is_loaded()
 {
-    return (m_left_roller_motor.GetOutputCurrent() >
-            CONSTANTS::ARM::LOADED_CURRENT);
+    return (
+        m_state != CONSTANTS::STATE::MAN_INTAKE &&
+        m_roller_encoder.GetVelocity() >
+            CONSTANTS::ARM::LOADED_RPM
+    );
 }
