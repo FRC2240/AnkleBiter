@@ -10,12 +10,13 @@
 class Roller
 {
     public:  
-        Roller(/* args */);
+        Roller(CONSTANTS::STATE &state);
         ~Roller();
         void spin(double speed);
         bool is_loaded();
 
     private:
+    CONSTANTS::STATE m_state;
     rev::SparkMaxPIDController m_roller_pid = m_left_roller_motor.GetPIDController();
     rev::SparkMaxRelativeEncoder m_roller_encoder = m_left_roller_motor.GetEncoder();
 

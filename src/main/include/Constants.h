@@ -51,8 +51,8 @@ namespace ARM
   constexpr double STORE_POS = 0.0; //CHANGEME
   constexpr double INTAKE_POS = 0.0; //CHANGEME
   constexpr double SCORE_POS = 0.0; //CHANGEME
-/// The needed current for the motor to indicate a cube being stored
-  constexpr double LOADED_CURRENT = 10;
+/// The needed RPM for the motor to indicate a cube being stored
+  constexpr double LOADED_RPM = 10;
 }
 
   namespace ROLLER
