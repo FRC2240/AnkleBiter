@@ -79,7 +79,7 @@ void Robot::TeleopPeriodic() {
     m_man_intake_toggle = !m_man_intake_toggle;
     m_extake_toggle = 0;
   }
-   if (BUTTON::MAN_INTAKE())
+   if (BUTTON::EXTAKE())
   {
     m_stowed_toggle = 0;
     m_intake_toggle = 0;
@@ -89,15 +89,24 @@ void Robot::TeleopPeriodic() {
   switch (m_state){ 
     case CONSTANTS::STATE::STOWED:
     break;
+    case CONSTANTS::STATE::MAN_INTAKE: //NOTE: No specific code needs to be written for man intake. If the state is man intake, is_loaded will always return false.
+    //Fallthough inferred 
     case CONSTANTS::STATE::INTAKE:
+    /*Make sure arm is in correct postition, use Arm Move to put it in correct postions, then spin Motors, spin until it says loaded, change state to STOW*/
+    m_arm.move(CONSTANTS::ARM::INTAKE_POS);
+    
+    m_roller.spin(1);
+    
+    if (m_roller.is_loaded())
+    {
+      m_state = CONSTANTS::STATE::STOWED;
+    }
     break;
     case CONSTANTS::STATE::EXTAKE:
     break;
-    case CONSTANTS::STATE::MAN_INTAKE: //NOTE: No specific code needs to be written for man intake. If the state is man intake, is_loaded will always return false.
-    break;
-  }
-}
 
+}
+}
 void Robot::DisabledInit() {}
 
 void Robot::DisabledPeriodic() {}
