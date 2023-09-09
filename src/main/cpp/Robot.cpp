@@ -91,7 +91,13 @@ void Robot::TeleopPeriodic() {
     break;
     case CONSTANTS::STATE::INTAKE:
     break;
-    case CONSTANTS::STATE::EXTAKE:
+    case CONSTANTS::STATE::EXTAKE: 
+    m_arm.move(CONSTANTS::ARM::SCORE_POS);
+    m_roller.spin(CONSTANTS::FF_SPEED);
+    //here
+    // 1. Move arm slightly to score
+    //
+    m_roller.spin(0);
     break;
     case CONSTANTS::STATE::MAN_INTAKE: //NOTE: No specific code needs to be written for man intake. If the state is man intake, is_loaded will always return false.
     break;
