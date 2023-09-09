@@ -60,6 +60,7 @@ namespace ARM
     constexpr int LEFT_MOTOR_ID = 3;
     constexpr int RIGHT_MOTOR_ID = 4;
     constexpr double VELOCITY = 1.0;
+    constexpr double SLOW = -0.1;
   }
 
   namespace DRIVE
