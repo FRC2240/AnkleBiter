@@ -15,6 +15,8 @@ class Roller
         void spin(double speed);
         bool is_loaded();
 
+
+
     private:
     CONSTANTS::STATE m_state;
     rev::SparkMaxPIDController m_roller_pid = m_left_roller_motor.GetPIDController();
