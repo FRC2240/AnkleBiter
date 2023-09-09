@@ -91,10 +91,6 @@ void Robot::TeleopPeriodic() {
     m_arm.move(CONSTANTS::ARM::STORE_POS);
     
     m_roller.spin(CONSTANTS::ROLLER::SLOW);
-   
-    // 1. Return arm to intake point
-    // 2. Remain in intake point
-    // 3. Spin rollers slowly to keep cube in
     break;
     case CONSTANTS::STATE::MAN_INTAKE: //NOTE: No specific code needs to be written for man intake. If the state is man intake, is_loaded will always return false.
     //Fallthough inferred 
