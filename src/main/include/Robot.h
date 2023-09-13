@@ -8,6 +8,7 @@
 
 #include "Arm.h"
 #include "Roller.h"
+#include "autoBalence.h"
 #include <frc/TimedRobot.h>
 #include <frc/smartdashboard/SendableChooser.h>
 
@@ -50,7 +51,9 @@ private:
   bool m_intake_toggle = false;
   bool m_extake_toggle = false;
   bool m_man_intake_toggle = false;
+  pathplanner::PathPlannerTrajectory m_fallback_traj;
   Arm m_arm;
+  autoBalance m_auto_balence;
   Roller m_roller{ m_state };
 #ifndef CFG_NO_DRIVEBASE
   Drivetrain m_drivetrain;

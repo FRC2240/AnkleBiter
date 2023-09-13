@@ -28,6 +28,7 @@ enum class AUTO_ACTIONS{
   NOTHING,
   SCORE,
   CROSS_LINE,
+  CROSS_LINE_P, //Periodic
   BALANCE,
   CENTER_CROSS_LINE,
 
@@ -87,6 +88,8 @@ namespace ARM
 
   namespace TRAJECTORY
   {
+    constexpr units::meter_t fall_back_dist {1.0};
+    constexpr units::meter_t fall_back_center {2.0};
     constexpr auto HP_VEL = 0.4_mps;
     constexpr units::meter_t SIMPLE_FORWARDS = -22_in; //CHANGEME
     const std::vector<units::meter_t> Y_POS =
