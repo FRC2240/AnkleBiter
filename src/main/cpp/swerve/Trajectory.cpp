@@ -20,9 +20,15 @@ static frc::HolonomicDriveController controller{
 
 frc::Timer m_trajTimer;
 
+Trajectory::Trajectory(Drivetrain* drivetrain, Odometry* odometry)
+    : m_drivetrain{ drivetrain }, m_odometry{ odometry }
+{
+
+}
+
 Trajectory::TrajDepends Trajectory::fall_back(units::meter_t fallback_pos)
 {
-    frc::Pose2d current_pose = m_odometry.getPose();
+    frc::Pose2d current_pose = m_odometry->getPose();
     Trajectory::TrajDepends ret;
 
         ret.desired_x = current_pose.X() - fallback_pos;
@@ -63,8 +69,8 @@ PathPlannerTrajectory Trajectory::generate_live_traj(TrajDepends t)
     return
         PathPlanner::generatePath(
 
-                                  PathConstraints(m_drivetrain.TRAJ_MAX_SPEED/2.5,
-                                                  m_drivetrain.TRAJ_MAX_ACCELERATION/2.5),
+                                  PathConstraints(m_drivetrain->TRAJ_MAX_SPEED/2.5,
+                                                  m_drivetrain->TRAJ_MAX_ACCELERATION/2.5),
 
                                   PathPoint(frc::Translation2d(t.current_x,
                                                                t.current_y),
@@ -93,8 +99,8 @@ PathPlannerTrajectory Trajectory::generate_live_traj(units::meter_t current_x,
 {
     PathPlannerTrajectory ret_val =
         PathPlanner::generatePath(
-                                  PathConstraints(m_drivetrain.TRAJ_MAX_SPEED/2,
-                                                  m_drivetrain.TRAJ_MAX_ACCELERATION/2),
+                                  PathConstraints(m_drivetrain->TRAJ_MAX_SPEED/2,
+                                                  m_drivetrain->TRAJ_MAX_ACCELERATION/2),
 
                                   PathPoint(frc::Translation2d(current_x,
                                                                current_y),
@@ -122,7 +128,7 @@ void Trajectory::init_live_traj(PathPlannerTrajectory traj, units::second_t offs
 
     // It is necessary to take the frc::Pose2d object from the state, extract its X & Y components, and then take the holonomicRotation
     // to construct a new Pose2d as the original Pose2d's Z (rotation) value uses non-holonomic math
-    m_odometry.resetPosition({inital_pose.Translation(), inital_state.holonomicRotation}, m_drivetrain.getCCWHeading());
+    m_odometry->resetPosition({inital_pose.Translation(), inital_state.holonomicRotation}, m_drivetrain->getCCWHeading());
 
     
     m_trajTimer.Reset();
@@ -153,10 +159,10 @@ bool Trajectory::follow_live_traj(PathPlannerTrajectory traj)
         }
         //std::cout << sample.pose.X().value() << " " <<  sample.pose.Y().value() << " " << sample.holonomicRotation.Degrees().value() << "\n";
 
-        m_odometry.getField2dObject("Traj")->SetPose({sample.pose.X(), sample.pose.Y(), sample.holonomicRotation});
+        m_odometry->getField2dObject("Traj")->SetPose({sample.pose.X(), sample.pose.Y(), sample.holonomicRotation});
 
         driveToState(sample);
-        m_odometry.update();
+        m_odometry->update();
 
         //if (periodic)
         //    periodic(current_time);
@@ -189,7 +195,7 @@ bool Trajectory::follow_live_traj(PathPlannerTrajectory traj)
     }
     else
         {
-            m_drivetrain.stop();
+            m_drivetrain->stop();
             return true;
         }
     return false;
@@ -210,8 +216,8 @@ void Trajectory::printFieldRelativeSpeeds()
 void Trajectory::driveToState(PathPlannerTrajectory::PathPlannerState const &state)
 {
     // Correction to help the robot follow trajectory (combination of original trajectory speeds & error correction)
-    frc::ChassisSpeeds const correction = controller.Calculate(m_odometry.getPose(), state.pose, state.velocity, state.holonomicRotation);
-    m_drivetrain.faceDirection(correction.vx, correction.vy, state.holonomicRotation.Degrees(), false, 4, m_drivetrain.TRAJ_MAX_ANGULAR_SPEED);
+    frc::ChassisSpeeds const correction = controller.Calculate(m_odometry->getPose(), state.pose, state.velocity, state.holonomicRotation);
+    m_drivetrain->faceDirection(correction.vx, correction.vy, state.holonomicRotation.Degrees(), false, 4, m_drivetrain->TRAJ_MAX_ANGULAR_SPEED);
 
     if constexpr (debugging)
     {
@@ -238,7 +244,7 @@ void Trajectory::follow(std::string const &traj_dir,
 
     // It is necessary to take the frc::Pose2d object from the state, extract its X & Y components, and then take the holonomicRotation
     // to construct a new Pose2d as the original Pose2d's Z (rotation) value uses non-holonomic math
-    m_odometry.resetPosition({inital_pose.Translation(), inital_state.holonomicRotation}, m_drivetrain.getCCWHeading());
+    m_odometry->resetPosition({inital_pose.Translation(), inital_state.holonomicRotation}, m_drivetrain->getCCWHeading());
 
     frc::Timer trajTimer;
     trajTimer.Start();
@@ -257,10 +263,10 @@ void Trajectory::follow(std::string const &traj_dir,
 
         auto sample = traj.sample(current_time);
 
-        m_odometry.getField2dObject("Traj")->SetPose({sample.pose.X(), sample.pose.Y(), sample.holonomicRotation});
+        m_odometry->getField2dObject("Traj")->SetPose({sample.pose.X(), sample.pose.Y(), sample.holonomicRotation});
 
         driveToState(sample);
-        m_odometry.update();
+        m_odometry->update();
 
         if (periodic)
             periodic(current_time);
@@ -280,11 +286,11 @@ void Trajectory::follow(std::string const &traj_dir,
         // This is the refresh rate of the HolonomicDriveController's PID controllers (can be tweaked if needed)
         std::this_thread::sleep_for(20ms);
     }
-    m_drivetrain.stop();
+    m_drivetrain->stop();
 }
 
 void Trajectory::testHolonomic(frc::Pose2d const &target_pose, units::velocity::meters_per_second_t const &velocity, frc::Rotation2d const &target_rot)
 {
-    m_drivetrain.drive(controller.Calculate(m_odometry.getPose(), target_pose, velocity, target_rot));
+    m_drivetrain->drive(controller.Calculate(m_odometry->getPose(), target_pose, velocity, target_rot));
 }
 #endif

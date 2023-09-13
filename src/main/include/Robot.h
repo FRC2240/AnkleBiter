@@ -10,6 +10,7 @@
 #include "Roller.h"
 #include <frc/TimedRobot.h>
 #include <frc/smartdashboard/SendableChooser.h>
+
 #ifndef CFG_NO_DRIVEBASE
 
 #include "swerve/Drivetrain.h"
@@ -18,7 +19,8 @@
 #include "swerve/Trajectory.h"
 #include "swerve/Vision.h"
 #include "swerve/ngr.h"
-#endif CFG_NO_DRIVEBASE
+
+#endif
 
 class Robot : public frc::TimedRobot
 {
@@ -54,5 +56,6 @@ private:
   Drivetrain m_drivetrain;
   Odometry m_odometry{ &m_drivetrain };
   Vision m_vision{ &m_drivetrain, &m_odometry };
+  Trajectory m_trajectory{ &m_drivetrain, &m_odometry};
 #endif
 };

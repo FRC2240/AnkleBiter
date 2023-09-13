@@ -7,6 +7,22 @@
 namespace BUTTON{
  
    frc::XboxController stick {0};
+   namespace DRIVETRAIN
+   {
+    inline double LX(){
+        return stick.GetLeftX();
+    }    
+    inline double LY(){
+        return stick.GetLeftY();
+    }
+    inline double RX(){
+        return stick.GetRightX();
+    }
+    inline double RY(){
+        return stick.GetRightY();
+    }
+   }
+   
 
     inline bool STOWED(){
         return stick.GetBButtonReleased();

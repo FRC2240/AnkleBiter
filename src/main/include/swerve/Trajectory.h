@@ -13,7 +13,6 @@
 #include "Constants.h"
 #include <functional>
 #include <cmath>
-#include "swerve/Drivetrain.h"
 #include "swerve/ngr.h"
 #include "swerve/Odometry.h"
 #include <frc/DriverStation.h>
@@ -31,7 +30,10 @@ using namespace pathplanner; // PathPlanner keeps everything hidden behind 2 set
 class Trajectory
 {
     public:
-    Trajectory();
+    Trajectory(
+        Drivetrain* drivetrain,
+        Odometry* odometry
+    );
 
     // Note: a 2023 comment means it is Moonwalker Specific and can be safely removed.
 
@@ -48,13 +50,10 @@ class Trajectory
         units::degree_t desired_rot;
     };
 
-    //2023
     TrajDepends fall_back(units::meter_t fallback_pos = 1.0_m);
 
-    //2023
     PathPlannerTrajectory generate_live_traj(TrajDepends t);
 
-    //2023
     PathPlannerTrajectory generate_live_traj(units::meter_t current_x,
                                              units::meter_t current_y,
                                              frc::Rotation2d current_head,
@@ -65,7 +64,6 @@ class Trajectory
                                              frc::Rotation2d desired_rot
                                              );
 
-    //2023
     PathPlannerTrajectory generate_live_traj(units::meter_t current_x,
                                              units::meter_t current_y,
                                              units::degree_t current_head,
@@ -117,7 +115,7 @@ class Trajectory
     bool reverse_trajectory = false;
 
     private:
-    Drivetrain m_drivetrain;
-    Odometry m_odometry;
+    Drivetrain* m_drivetrain;
+    Odometry* m_odometry;
 };
 #endif
