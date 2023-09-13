@@ -18,6 +18,7 @@
 #include "swerve/Trajectory.h"
 #include "swerve/Vision.h"
 #include "swerve/ngr.h"
+#endif CFG_NO_DRIVEBASE
 
 class Robot : public frc::TimedRobot
 {
