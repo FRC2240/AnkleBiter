@@ -76,15 +76,26 @@ void Robot::AutonomousPeriodic()
 
       break;
     case CONSTANTS::AUTO_ACTIONS::BALANCE:
-
-      break;
+      m_auto_balence.auto_balance_routine();      break;
     case CONSTANTS::AUTO_ACTIONS::CENTER_CROSS_LINE:
-
+    m_fallback_traj = m_trajectory.generate_live_traj(m_trajectory.fall_back(CONSTANTS::TRAJECTORY::fall_back_center));
+    m_trajectory.init_live_traj(m_fallback_traj);
+    m_action = CONSTANTS::AUTO_ACTIONS::CROSS_LINE_P;
       break;
 
     case CONSTANTS::AUTO_ACTIONS::CROSS_LINE:
-  
-      break;
+    m_fallback_traj = m_trajectory.generate_live_traj(m_trajectory.fall_back(CONSTANTS::TRAJECTORY::fall_back_dist));
+    m_trajectory.init_live_traj(m_fallback_traj);
+    m_action = CONSTANTS::AUTO_ACTIONS::CROSS_LINE_P;
+    break;
+
+    case CONSTANTS::AUTO_ACTIONS::CROSS_LINE_P:
+    if (m_trajectory.follow_live_traj(m_fallback_traj))
+    {
+      //next state
+    }
+
+    break;
 
     case CONSTANTS::AUTO_ACTIONS::SCORE:
 
