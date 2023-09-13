@@ -62,6 +62,29 @@ void Robot::AutonomousPeriodic()
     {
       // Default Auto goes here
     }
+    switch (m_action)
+    {
+    case CONSTANTS::AUTO_ACTIONS::NOTHING:
+
+      break;
+    case CONSTANTS::AUTO_ACTIONS::BALANCE:
+
+      break;
+    case CONSTANTS::AUTO_ACTIONS::CENTER_CROSS_LINE:
+
+      break;
+
+    case CONSTANTS::AUTO_ACTIONS::CROSS_LINE:
+  
+      break;
+
+    case CONSTANTS::AUTO_ACTIONS::SCORE:
+
+      break;
+
+    default:
+      break;
+    }
 }
 
 void Robot::TeleopInit() {}

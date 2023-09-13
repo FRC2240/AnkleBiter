@@ -32,6 +32,7 @@ class Robot : public frc::TimedRobot {
   const std::string kAutoNameCustom = "My Auto";
   std::string m_autoSelected;
   CONSTANTS::STATE m_state = CONSTANTS::STATE::STOWED;
+  CONSTANTS::AUTO_ACTIONS m_action = CONSTANTS::AUTO_ACTIONS::NOTHING;
   bool m_stowed_toggle = true;
   bool m_intake_toggle = false;
   bool m_extake_toggle = false;

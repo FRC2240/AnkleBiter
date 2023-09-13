@@ -23,6 +23,15 @@ namespace CONSTANTS
   MAN_INTAKE,
 
 };
+
+enum class AUTO_ACTIONS{
+  NOTHING,
+  SCORE,
+  CROSS_LINE,
+  BALANCE,
+  CENTER_CROSS_LINE,
+
+};
 constexpr double FF_SPEED = -0.1;
   constexpr int XBOX_PORT = 0;
   constexpr int AUX_XBOX_PORT = 1;
