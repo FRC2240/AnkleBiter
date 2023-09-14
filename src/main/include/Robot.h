@@ -5,6 +5,7 @@
 #pragma once
 
 #include <string>
+#include <list>
 
 #include "Arm.h"
 #include "Roller.h"
@@ -40,10 +41,38 @@ public:
   void SimulationPeriodic() override;
 
 private:
+  frc::Timer m_score_timer;
   void swerveDrive(bool const &field_relative);
   frc::SendableChooser<std::string> m_chooser;
   const std::string kAutoNameDefault = "Default";
   const std::string kAutoNameCustom = "My Auto";
+  std::list<CONSTANTS::AUTO_ACTIONS> m_auto_sequence;
+// Score balance 
+// Score Cross line balance
+std::list <CONSTANTS::AUTO_ACTIONS> score_balance {
+   CONSTANTS::AUTO_ACTIONS::SCORE,
+   CONSTANTS::AUTO_ACTIONS::BALANCE,
+  CONSTANTS::AUTO_ACTIONS::NOTHING,
+};
+
+  std::list<CONSTANTS::AUTO_ACTIONS> score_cross_line_bal {
+    CONSTANTS::AUTO_ACTIONS::SCORE,
+    CONSTANTS::AUTO_ACTIONS::CENTER_CROSS_LINE, 
+    CONSTANTS::AUTO_ACTIONS::BALANCE,
+    CONSTANTS::AUTO_ACTIONS::NOTHING,
+  };
+
+std::list<CONSTANTS::AUTO_ACTIONS> score_do_nothing {
+  CONSTANTS::AUTO_ACTIONS::SCORE,
+  CONSTANTS::AUTO_ACTIONS::NOTHING,
+};
+
+  std::list<CONSTANTS::AUTO_ACTIONS> score_go_back {
+    CONSTANTS::AUTO_ACTIONS::SCORE,
+    CONSTANTS::AUTO_ACTIONS::CROSS_LINE,
+    CONSTANTS::AUTO_ACTIONS::NOTHING,
+  };
+
   std::string m_autoSelected;
   CONSTANTS::AUTO_ACTIONS m_action = CONSTANTS::AUTO_ACTIONS::NOTHING;
   CONSTANTS::STATE m_state = CONSTANTS::STATE::STOWED;
@@ -58,7 +87,7 @@ private:
 #ifndef CFG_NO_DRIVEBASE
   Drivetrain m_drivetrain;
   Odometry m_odometry{ &m_drivetrain };
-  Vision m_vision{ &m_drivetrain, &m_odometry };
+  Vision m_vision{ &m_drivetrain, &m_odometry }; 
   Trajectory m_trajectory{ &m_drivetrain, &m_odometry};
 #endif
 };

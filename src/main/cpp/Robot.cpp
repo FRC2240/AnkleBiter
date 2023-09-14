@@ -62,21 +62,31 @@ void Robot::AutonomousInit()
 
 void Robot::AutonomousPeriodic()
 {
-  if(m_autoSelected == kAutoNameCustom)
+  if(m_autoSelected == "Score Go Back")
     {
-      // Custom Auto goes here
+      m_auto_sequence = score_go_back;
     }
-  else
+  else if (m_autoSelected == "Score do nothing")
     {
-      // Default Auto goes here
+      m_auto_sequence = score_do_nothing; 
     }
+    else if (m_autoSelected == "Score Balance") 
+    {
+    m_auto_sequence = score_balance;
+  }
+  else if (m_autoSelected == "Score cross line balance")
+  {
+    m_auto_sequence = score_cross_line_bal;
+  }
+    m_action = m_auto_sequence.front();
     switch (m_action)
     {
     case CONSTANTS::AUTO_ACTIONS::NOTHING:
 
       break;
     case CONSTANTS::AUTO_ACTIONS::BALANCE:
-      m_auto_balence.auto_balance_routine();      break;
+      m_auto_balence.auto_balance_routine();     
+    break;
     case CONSTANTS::AUTO_ACTIONS::CENTER_CROSS_LINE:
     m_fallback_traj = m_trajectory.generate_live_traj(m_trajectory.fall_back(CONSTANTS::TRAJECTORY::fall_back_center));
     m_trajectory.init_live_traj(m_fallback_traj);
@@ -92,13 +102,21 @@ void Robot::AutonomousPeriodic()
     case CONSTANTS::AUTO_ACTIONS::CROSS_LINE_P:
     if (m_trajectory.follow_live_traj(m_fallback_traj))
     {
-      //next state
+      m_auto_sequence.pop_front();
     }
 
     break;
 
     case CONSTANTS::AUTO_ACTIONS::SCORE:
-
+    m_score_timer.Start();
+    if (m_score_timer.Get() <= 0.5_s)
+    {    
+      m_roller.spin(1);
+    }
+    else
+    {
+      m_auto_sequence.pop_front();
+    }
       break;
 
     default:

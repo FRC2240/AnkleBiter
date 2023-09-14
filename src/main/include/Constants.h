@@ -31,7 +31,7 @@ enum class AUTO_ACTIONS{
   CROSS_LINE_P, //Periodic
   BALANCE,
   CENTER_CROSS_LINE,
-
+  CENTER_CROSS_LINE_P,
 };
 constexpr double FF_SPEED = -0.1;
   constexpr int XBOX_PORT = 0;
