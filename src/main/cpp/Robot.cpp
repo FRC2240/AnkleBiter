@@ -66,57 +66,61 @@ void Robot::AutonomousPeriodic()
     {
       m_auto_sequence = score_go_back;
     }
-  else if (m_autoSelected == "Score do nothing")
+  else if(m_autoSelected == "Score do nothing")
     {
-      m_auto_sequence = score_do_nothing; 
+      m_auto_sequence = score_do_nothing;
     }
-    else if (m_autoSelected == "Score Balance") 
+  else if(m_autoSelected == "Score Balance")
     {
-    m_auto_sequence = score_balance;
-  }
-  else if (m_autoSelected == "Score cross line balance")
-  {
-    m_auto_sequence = score_cross_line_bal;
-  }
-    m_action = m_auto_sequence.front();
-    switch (m_action)
+      m_auto_sequence = score_balance;
+    }
+  else if(m_autoSelected == "Score cross line balance")
+    {
+      m_auto_sequence = score_cross_line_bal;
+    }
+  m_action = m_auto_sequence.front();
+  switch(m_action)
     {
     case CONSTANTS::AUTO_ACTIONS::NOTHING:
 
       break;
+
     case CONSTANTS::AUTO_ACTIONS::BALANCE:
-      m_auto_balence.auto_balance_routine();     
-    break;
+      m_auto_balence.auto_balance_routine();
+      break;
+
     case CONSTANTS::AUTO_ACTIONS::CENTER_CROSS_LINE:
-    m_fallback_traj = m_trajectory.generate_live_traj(m_trajectory.fall_back(CONSTANTS::TRAJECTORY::fall_back_center));
-    m_trajectory.init_live_traj(m_fallback_traj);
-    m_action = CONSTANTS::AUTO_ACTIONS::CROSS_LINE_P;
+      m_fallback_traj = m_trajectory.generate_live_traj(
+          m_trajectory.fall_back(CONSTANTS::TRAJECTORY::fall_back_center));
+      m_trajectory.init_live_traj(m_fallback_traj);
+      m_action = CONSTANTS::AUTO_ACTIONS::CROSS_LINE_P;
       break;
 
     case CONSTANTS::AUTO_ACTIONS::CROSS_LINE:
-    m_fallback_traj = m_trajectory.generate_live_traj(m_trajectory.fall_back(CONSTANTS::TRAJECTORY::fall_back_dist));
-    m_trajectory.init_live_traj(m_fallback_traj);
-    m_action = CONSTANTS::AUTO_ACTIONS::CROSS_LINE_P;
-    break;
+      m_fallback_traj = m_trajectory.generate_live_traj(
+          m_trajectory.fall_back(CONSTANTS::TRAJECTORY::fall_back_dist));
+      m_trajectory.init_live_traj(m_fallback_traj);
+      m_action = CONSTANTS::AUTO_ACTIONS::CROSS_LINE_P;
+      break;
 
     case CONSTANTS::AUTO_ACTIONS::CROSS_LINE_P:
-    if (m_trajectory.follow_live_traj(m_fallback_traj))
-    {
-      m_auto_sequence.pop_front();
-    }
+      if(m_trajectory.follow_live_traj(m_fallback_traj))
+        {
+          m_auto_sequence.pop_front();
+        }
 
-    break;
+      break;
 
     case CONSTANTS::AUTO_ACTIONS::SCORE:
-    m_score_timer.Start();
-    if (m_score_timer.Get() <= 0.5_s)
-    {    
-      m_roller.spin(1);
-    }
-    else
-    {
-      m_auto_sequence.pop_front();
-    }
+      m_score_timer.Start();
+      if(m_score_timer.Get() <= 0.5_s)
+        {
+          m_roller.spin(1);
+        }
+      else
+        {
+          m_auto_sequence.pop_front();
+        }
       break;
 
     default:
@@ -134,10 +138,14 @@ void Robot::TeleopInit()
 void Robot::swerveDrive(bool const &field_relative)
 {
 #ifndef CFG_NO_DRIVEBASE
-  const units::meters_per_second_t left_right { -frc::ApplyDeadband(BUTTON::DRIVETRAIN::LX(), CONSTANTS::DEADBAND)};
+  const units::meters_per_second_t left_right{ -frc::ApplyDeadband(
+      BUTTON::DRIVETRAIN::LX(), CONSTANTS::DEADBAND) };
 
-  const units::meters_per_second_t front_back { -frc::ApplyDeadband(BUTTON::DRIVETRAIN::LY(), CONSTANTS::DEADBAND)};
-  auto const rot = frc::ApplyDeadband(BUTTON::DRIVETRAIN::RX(), CONSTANTS::DEADBAND) * (CONSTANTS::DRIVE::TELEOP_MAX_ANGULAR_SPEED);
+  const units::meters_per_second_t front_back{ -frc::ApplyDeadband(
+      BUTTON::DRIVETRAIN::LY(), CONSTANTS::DEADBAND) };
+  auto const rot
+      = frc::ApplyDeadband(BUTTON::DRIVETRAIN::RX(), CONSTANTS::DEADBAND)
+        * (CONSTANTS::DRIVE::TELEOP_MAX_ANGULAR_SPEED);
 
   m_drivetrain.drive(front_back, -left_right, rot, field_relative);
 
@@ -150,76 +158,77 @@ void Robot::swerveDrive(bool const &field_relative)
 void Robot::TeleopPeriodic()
 {
   if(BUTTON::STOWED())
-  {
-    m_stowed_toggle = !m_stowed_toggle;
-    m_intake_toggle = 0;
-    m_man_intake_toggle = 0;
-    m_extake_toggle = 0;
-  }
+    {
+      m_stowed_toggle = !m_stowed_toggle;
+      m_intake_toggle = 0;
+      m_man_intake_toggle = 0;
+      m_extake_toggle = 0;
+    }
   if(BUTTON::INTAKE())
-  {
-    m_stowed_toggle = 0;
-    m_intake_toggle = !m_intake_toggle;
-    m_man_intake_toggle = 0;
-    m_extake_toggle = 0;
-  }
+    {
+      m_stowed_toggle = 0;
+      m_intake_toggle = !m_intake_toggle;
+      m_man_intake_toggle = 0;
+      m_extake_toggle = 0;
+    }
   if(BUTTON::MAN_INTAKE())
-  {
-    m_stowed_toggle = 0;
-    m_intake_toggle = 0;
-    m_man_intake_toggle = !m_man_intake_toggle;
-    m_extake_toggle = 0;
-  }
+    {
+      m_stowed_toggle = 0;
+      m_intake_toggle = 0;
+      m_man_intake_toggle = !m_man_intake_toggle;
+      m_extake_toggle = 0;
+    }
   if(BUTTON::EXTAKE())
-  {
-    m_stowed_toggle = 0;
-    m_intake_toggle = 0;
-    m_man_intake_toggle = 0;
-    m_extake_toggle = !m_extake_toggle;
-  }
+    {
+      m_stowed_toggle = 0;
+      m_intake_toggle = 0;
+      m_man_intake_toggle = 0;
+      m_extake_toggle = !m_extake_toggle;
+    }
 
   if(m_extake_toggle)
-  {
-    m_state = CONSTANTS::STATE::EXTAKE;
-  }
+    {
+      m_state = CONSTANTS::STATE::EXTAKE;
+    }
   if(m_intake_toggle)
-  {
-    m_state = CONSTANTS::STATE::INTAKE;
-  }
+    {
+      m_state = CONSTANTS::STATE::INTAKE;
+    }
   if(m_stowed_toggle)
-  {
-    m_state = CONSTANTS::STATE::STOWED;
-  }
+    {
+      m_state = CONSTANTS::STATE::STOWED;
+    }
   if(m_man_intake_toggle)
-  {
-    m_state = CONSTANTS::STATE::MAN_INTAKE;
-  }
+    {
+      m_state = CONSTANTS::STATE::MAN_INTAKE;
+    }
   switch(m_state)
-  {
+    {
     case CONSTANTS::STATE::STOWED:
       m_arm.move(CONSTANTS::ARM::STORE_POS);
       m_roller.spin(CONSTANTS::ROLLER::SLOW);
 
       break;
     case CONSTANTS::STATE::MAN_INTAKE: // NOTE: No specific code needs to be
-      // written for man intake. If the state
-      // is man intake, is_loaded will always
-      // return false. Fallthough inferred
+                                       // written for man intake. If the state
+                                       // is man intake, is_loaded will always
+                                       // return false.
+                                       // Fallthrough (lack of break) intended.
     case CONSTANTS::STATE::INTAKE:
       m_arm.move(CONSTANTS::ARM::INTAKE_POS);
-      m_roller.spin(1);
+      m_roller.spin(1); // No idea if this is the right value/sign or not
 
       if(m_roller.is_loaded())
-      {
-        m_state = CONSTANTS::STATE::STOWED;
-      }
+        {
+          m_state = CONSTANTS::STATE::STOWED;
+        }
       break;
     case CONSTANTS::STATE::EXTAKE:
       m_arm.move(CONSTANTS::ARM::SCORE_POS);
       m_roller.spin(CONSTANTS::FF_SPEED);
-      m_roller.spin(0);
+      m_roller.spin(-1); // No idea if this is the right value/sign or not
       break;
-  }
+    }
 }
 void Robot::DisabledInit() {}
 
