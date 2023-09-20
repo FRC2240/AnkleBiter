@@ -8,10 +8,14 @@ frc::TimeOfFlight tof_sensor{1};
 
 //extern frc::SwerveDriveKinematics<4> const kinematics;
 
-frc::SwerveDriveKinematics<4> kinematics{frc::Translation2d{12.25_in, -12.25_in},
-                                         frc::Translation2d{12.25_in, 12.25_in},
-                                         frc::Translation2d{-12.25_in, -12.25_in},
-                                         frc::Translation2d{-12.25_in, 12.25_in}};
+// This is not how it should be but doing it "correctly" (++,+-,-+,--) causes
+// the wheels to form an "X" instead of diamond while turning.
+// It's wrong but it works, no touchy.
+
+frc::SwerveDriveKinematics<4> kinematics{frc::Translation2d{7.375_in, -7.375_in},
+                                         frc::Translation2d{7.375_in, 7.375_in},
+                                         frc::Translation2d{-7.375_in, -7.375_in},
+                                         frc::Translation2d{-7.375_in, 7.375_in}};
 
 static frc::SwerveDriveOdometry<4> odometry{
     kinematics,

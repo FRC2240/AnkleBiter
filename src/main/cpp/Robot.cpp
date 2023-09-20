@@ -62,6 +62,7 @@ void Robot::AutonomousInit()
 
 void Robot::AutonomousPeriodic()
 {
+  /*
   if(m_autoSelected == "Score Go Back")
     {
       m_auto_sequence = score_go_back;
@@ -126,6 +127,7 @@ void Robot::AutonomousPeriodic()
     default:
       break;
     }
+    */
 }
 
 void Robot::TeleopInit()
@@ -138,11 +140,11 @@ void Robot::TeleopInit()
 void Robot::swerveDrive(bool const &field_relative)
 {
 #ifndef CFG_NO_DRIVEBASE
-  const units::meters_per_second_t left_right{ -frc::ApplyDeadband(
-      BUTTON::DRIVETRAIN::LX(), CONSTANTS::DEADBAND) };
+  const units::meters_per_second_t left_right{ -(frc::ApplyDeadband(
+      BUTTON::DRIVETRAIN::LX(), CONSTANTS::DEADBAND)) * CONSTANTS::DRIVE::TELEOP_MAX_SPEED };
 
-  const units::meters_per_second_t front_back{ -frc::ApplyDeadband(
-      BUTTON::DRIVETRAIN::LY(), CONSTANTS::DEADBAND) };
+  const units::meters_per_second_t front_back{ -(frc::ApplyDeadband(
+      BUTTON::DRIVETRAIN::LY(), CONSTANTS::DEADBAND)) * CONSTANTS::DRIVE::TELEOP_MAX_SPEED };
   auto const rot
       = frc::ApplyDeadband(BUTTON::DRIVETRAIN::RX(), CONSTANTS::DEADBAND)
         * (CONSTANTS::DRIVE::TELEOP_MAX_ANGULAR_SPEED);
@@ -157,6 +159,9 @@ void Robot::swerveDrive(bool const &field_relative)
 
 void Robot::TeleopPeriodic()
 {
+  Robot::swerveDrive(true);
+
+  /*
   if(BUTTON::STOWED())
     {
       m_stowed_toggle = !m_stowed_toggle;
@@ -229,6 +234,7 @@ void Robot::TeleopPeriodic()
       m_roller.spin(-1); // No idea if this is the right value/sign or not
       break;
     }
+    */
 }
 void Robot::DisabledInit() {}
 
