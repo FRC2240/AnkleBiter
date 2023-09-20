@@ -83,7 +83,7 @@ std::list<CONSTANTS::AUTO_ACTIONS> score_do_nothing {
   pathplanner::PathPlannerTrajectory m_fallback_traj;
   //Arm m_arm;
   autoBalance m_auto_balence;
-  //Roller m_roller{ m_state };
+  Roller m_roller{ m_state };
 #ifndef CFG_NO_DRIVEBASE
   Drivetrain m_drivetrain;
   Odometry m_odometry{ &m_drivetrain };

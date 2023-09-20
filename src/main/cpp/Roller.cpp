@@ -3,7 +3,7 @@
 Roller::Roller(CONSTANTS::STATE &state)
 : m_state {state}
 {
-    m_right_roller_motor.Follow(m_left_roller_motor);
+    m_right_roller_motor.Follow(m_left_roller_motor, true);
 
 }
 

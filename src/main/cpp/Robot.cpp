@@ -159,9 +159,10 @@ void Robot::swerveDrive(bool const &field_relative)
 
 void Robot::TeleopPeriodic()
 {
+  m_roller.spin(-BUTTON::stick.GetRightTriggerAxis());
+  /*
   Robot::swerveDrive(true);
 
-  /*
   if(BUTTON::STOWED())
     {
       m_stowed_toggle = !m_stowed_toggle;
@@ -235,6 +236,7 @@ void Robot::TeleopPeriodic()
       break;
     }
     */
+
 }
 void Robot::DisabledInit() {}
 
