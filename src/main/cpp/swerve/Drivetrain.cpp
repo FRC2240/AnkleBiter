@@ -30,10 +30,10 @@ extern frc::SwerveDriveKinematics<4> kinematics;
 Drivetrain::Drivetrain(){
   //navx = std::make_unique<AHRS>(frc::SPI::Port::kMXP);
   using namespace Module;
-  front_left  = std::make_unique<SwerveModule>(60, 61, 14, 11.689/*2.256*/);
-  front_right = std::make_unique<SwerveModule>(50, 51, 13, 117.369/*-609.561*/);
-  back_left   = std::make_unique<SwerveModule>(30, 31, 11, 22.061/*14.121*/);
-  back_right  = std::make_unique<SwerveModule>(40, 41, 12, 157.115/*153.715*/);
+  front_left  = std::make_unique<SwerveModule>(60, 61, 14, 79.277);
+  front_right = std::make_unique<SwerveModule>(50, 51, 13, 251.015);
+  back_left   = std::make_unique<SwerveModule>(30, 31, 11, -120.938);
+  back_right  = std::make_unique<SwerveModule>(40, 41, 12, 19.652);
 
  }
 

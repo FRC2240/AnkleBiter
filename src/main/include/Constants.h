@@ -59,9 +59,10 @@ namespace ARM
   constexpr double STEP = 10;
   constexpr int LEFT_MOTOR_ID = 1;
   constexpr int RIGHT_MOTOR_ID = 2;
-  constexpr double STORE_POS = 0.0; //CHANGEME
-  constexpr double INTAKE_POS = 0.0; //CHANGEME
-  constexpr double SCORE_POS = 0.0; //CHANGEME
+  constexpr double INTAKE_VEL = 0.25;
+  constexpr double STORE_POS = 0.952; //CHANGEME
+  constexpr double INTAKE_POS = 0.476; //CHANGEME
+  constexpr double SCORE_POS = STORE_POS; //CHANGEME
 /// The needed RPM for the motor to indicate a cube being stored
   constexpr double LOADED_RPM = 10;
 }
@@ -71,12 +72,12 @@ namespace ARM
     constexpr int LEFT_MOTOR_ID = 3;
     constexpr int RIGHT_MOTOR_ID = 4;
     constexpr double VELOCITY = 1.0;
-    constexpr double SLOW = -0.1;
+    constexpr double SLOW = -0.01;
   }
 
   namespace DRIVE
   {
-    constexpr units::meters_per_second_t ROBOT_MAX_SPEED =  14.533_fps;
+    constexpr units::meters_per_second_t ROBOT_MAX_SPEED =  18.533_fps;
     constexpr units::radians_per_second_t ROBOT_MAX_ANGULAR_SPEED{std::numbers::pi*1.25};
     constexpr units::meters_per_second_t TELEOP_MAX_SPEED = ROBOT_MAX_SPEED;
     constexpr units::radians_per_second_t TELEOP_MAX_ANGULAR_SPEED{std::numbers::pi*1.25};

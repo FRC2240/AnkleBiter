@@ -6,7 +6,7 @@
 #include <iostream>
 #include <fmt/format.h>
 #ifndef CFG_NO_DRIVEBASE
-#define CAN_BUS_NAME "canivore"
+#define CAN_BUS_NAME "swervecan"
 
 /******************************************************************/
 /*                       Private Constants                        */
