@@ -81,7 +81,7 @@ std::list<CONSTANTS::AUTO_ACTIONS> score_do_nothing {
   bool m_extake_toggle = false;
   bool m_man_intake_toggle = false;
   pathplanner::PathPlannerTrajectory m_fallback_traj;
-  //Arm m_arm;
+  Arm m_arm;
   autoBalance m_auto_balence;
   Roller m_roller{ m_state };
 #ifndef CFG_NO_DRIVEBASE

@@ -159,8 +159,7 @@ void Robot::swerveDrive(bool const &field_relative)
 
 void Robot::TeleopPeriodic()
 {
-  m_roller.spin(-BUTTON::stick.GetRightTriggerAxis());
-  /*
+  
   Robot::swerveDrive(true);
 
   if(BUTTON::STOWED())
@@ -222,7 +221,7 @@ void Robot::TeleopPeriodic()
                                        // Fallthrough (lack of break) intended.
     case CONSTANTS::STATE::INTAKE:
       m_arm.move(CONSTANTS::ARM::INTAKE_POS);
-      m_roller.spin(1); // No idea if this is the right value/sign or not
+      m_roller.spin(CONSTANTS::ARM::INTAKE_VEL); // No idea if this is the right value/sign or not
 
       if(m_roller.is_loaded())
         {
@@ -235,7 +234,6 @@ void Robot::TeleopPeriodic()
       m_roller.spin(-1); // No idea if this is the right value/sign or not
       break;
     }
-    */
 
 }
 void Robot::DisabledInit() {}

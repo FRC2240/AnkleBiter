@@ -9,6 +9,7 @@
 #include <frc2/command/SubsystemBase.h>
 #include <rev/CANSparkMax.h>
 #include <frc/motorcontrol/MotorControllerGroup.h>
+#include <rev/AbsoluteEncoder.h>
 
 class Arm : public frc2::SubsystemBase {
   public:
@@ -45,7 +46,8 @@ class Arm : public frc2::SubsystemBase {
 
   rev::SparkMaxPIDController m_arm_pid = m_left_arm_motor.GetPIDController();
 
-  rev::SparkMaxRelativeEncoder m_arm_encoder = m_left_arm_motor.GetEncoder();
+  rev::SparkMaxAbsoluteEncoder m_arm_encoder = m_left_arm_motor.GetAbsoluteEncoder(rev::SparkMaxAbsoluteEncoder::Type::kDutyCycle);
 
-  CONSTANTS::PidCoeff m_arm_coeff = {1};
+
+  CONSTANTS::PidCoeff m_arm_coeff = {0.5, 0, 0, 0, 0, -1.0, 1.0};
 };
