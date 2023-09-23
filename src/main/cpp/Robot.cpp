@@ -189,6 +189,7 @@ void Robot::TeleopPeriodic()
       m_intake_toggle = 0;
       m_man_intake_toggle = 0;
       m_extake_toggle = !m_extake_toggle;
+      m_score_timer.Reset();
     }
 
   if(m_extake_toggle)
@@ -231,11 +232,21 @@ void Robot::TeleopPeriodic()
     case CONSTANTS::STATE::EXTAKE:
       m_arm.move(CONSTANTS::ARM::SCORE_POS);
       m_roller.spin(CONSTANTS::FF_SPEED);
-      m_roller.spin(-1); // No idea if this is the right value/sign or not
+      m_roller.spin(-1);
+      m_score_timer.Start();
+      
+        if(m_score_timer.Get() > units::time::second_t(0.5)) 
+        {
+          m_score_timer.Stop();
+          m_score_timer.Reset();
+          m_state = CONSTANTS::STATE::STOWED;
+          m_extake_toggle = !m_extake_toggle;
+        }
       break;
     }
 
 }
+
 void Robot::DisabledInit() {}
 
 void Robot::DisabledPeriodic() {}
