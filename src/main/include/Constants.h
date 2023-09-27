@@ -60,9 +60,9 @@ namespace ARM
   constexpr int LEFT_MOTOR_ID = 1;
   constexpr int RIGHT_MOTOR_ID = 2;
   constexpr double INTAKE_VEL = 0.25;
-  constexpr double STORE_POS = 0.952; //CHANGEME
-  constexpr double INTAKE_POS = 0.476; //CHANGEME
-  constexpr double SCORE_POS = STORE_POS; //CHANGEME
+  constexpr double STORE_POS = 0.952; 
+  constexpr double INTAKE_POS = 0.476; 
+  constexpr double SCORE_POS = STORE_POS;
 /// The needed RPM for the motor to indicate a cube being stored
   constexpr double LOADED_RPM = 10;
 }

@@ -49,5 +49,5 @@ class Arm : public frc2::SubsystemBase {
   rev::SparkMaxAbsoluteEncoder m_arm_encoder = m_left_arm_motor.GetAbsoluteEncoder(rev::SparkMaxAbsoluteEncoder::Type::kDutyCycle);
 
 
-  CONSTANTS::PidCoeff m_arm_coeff = {0.5, 0, 0, 0, 0, -1.0, 1.0};
+  CONSTANTS::PidCoeff m_arm_coeff = {2, 0, 0, 0, 0, -1.0, 1.0};
 };
