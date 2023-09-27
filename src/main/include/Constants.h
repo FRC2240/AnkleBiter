@@ -33,7 +33,7 @@ enum class AUTO_ACTIONS{
   CENTER_CROSS_LINE,
   CENTER_CROSS_LINE_P,
 };
-constexpr double FF_SPEED = -0.1;
+constexpr double FF_SPEED = 0.0225;
   constexpr int XBOX_PORT = 0;
   constexpr int AUX_XBOX_PORT = 1;
   constexpr double NON_TURBO = 1;
@@ -63,8 +63,7 @@ namespace ARM
   constexpr double STORE_POS = 0.952; 
   constexpr double INTAKE_POS = 0.476; 
   constexpr double SCORE_POS = STORE_POS;
-/// The needed RPM for the motor to indicate a cube being stored
-  constexpr double LOADED_RPM = 10;
+
 }
 
   namespace ROLLER
@@ -73,6 +72,10 @@ namespace ARM
     constexpr int RIGHT_MOTOR_ID = 4;
     constexpr double VELOCITY = 1.0;
     constexpr double SLOW = -0.01;
+    constexpr int TOF_CAN = 88;
+
+/// The needed TOF range for the motor to indicate a cube being stored
+  constexpr units::millimeter_t LOADED_RANGE = 250_mm;
   }
 
   namespace DRIVE
