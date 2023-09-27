@@ -18,9 +18,9 @@ void Roller::spin(double speed)
 
 bool Roller::is_loaded()
 {
+    frc::SmartDashboard::PutNumber("range", m_tof_sensor.GetRange());
     return (
-        m_state != CONSTANTS::STATE::MAN_INTAKE &&
-        m_roller_encoder.GetVelocity() >
-            CONSTANTS::ARM::LOADED_RPM
+        (m_state != CONSTANTS::STATE::MAN_INTAKE) &&
+        (units::millimeter_t {m_tof_sensor.GetRange()} < CONSTANTS::ROLLER::LOADED_RANGE)
     );
 }

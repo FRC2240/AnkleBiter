@@ -140,6 +140,12 @@ void Robot::TeleopInit()
 void Robot::swerveDrive(bool const &field_relative)
 {
 #ifndef CFG_NO_DRIVEBASE
+
+if (BUTTON::stick.GetStartButtonReleased())
+{
+  m_drivetrain.zero_yaw();
+}
+
   const units::meters_per_second_t left_right{ -(frc::ApplyDeadband(
       BUTTON::DRIVETRAIN::LX(), CONSTANTS::DEADBAND)) * CONSTANTS::DRIVE::TELEOP_MAX_SPEED };
 
@@ -213,6 +219,8 @@ void Robot::TeleopPeriodic()
     case CONSTANTS::STATE::STOWED:
       m_arm.move(CONSTANTS::ARM::STORE_POS);
       m_roller.spin(CONSTANTS::ROLLER::SLOW);
+      m_roller.spin(CONSTANTS::FF_SPEED);
+    frc::SmartDashboard::PutString("state", "stowed");
 
       break;
     case CONSTANTS::STATE::MAN_INTAKE: // NOTE: No specific code needs to be
@@ -221,17 +229,20 @@ void Robot::TeleopPeriodic()
                                        // return false.
                                        // Fallthrough (lack of break) intended.
     case CONSTANTS::STATE::INTAKE:
+    frc::SmartDashboard::PutString("state", "intake");
       m_arm.move(CONSTANTS::ARM::INTAKE_POS);
       m_roller.spin(CONSTANTS::ARM::INTAKE_VEL); // No idea if this is the right value/sign or not
-
+  frc::SmartDashboard::PutBoolean("loaded", m_roller.is_loaded());
       if(m_roller.is_loaded())
         {
+          m_intake_toggle = 0;
+          m_stowed_toggle = 1;
           m_state = CONSTANTS::STATE::STOWED;
         }
       break;
+
     case CONSTANTS::STATE::EXTAKE:
       m_arm.move(CONSTANTS::ARM::SCORE_POS);
-      m_roller.spin(CONSTANTS::FF_SPEED);
       m_roller.spin(-1);
       m_score_timer.Start();
       
