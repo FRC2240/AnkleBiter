@@ -140,6 +140,12 @@ void Robot::TeleopInit()
 void Robot::swerveDrive(bool const &field_relative)
 {
 #ifndef CFG_NO_DRIVEBASE
+
+if (BUTTON::stick.GetStartButtonReleased())
+{
+  m_drivetrain.zero_yaw();
+}
+
   const units::meters_per_second_t left_right{ -(frc::ApplyDeadband(
       BUTTON::DRIVETRAIN::LX(), CONSTANTS::DEADBAND)) * CONSTANTS::DRIVE::TELEOP_MAX_SPEED };
 
