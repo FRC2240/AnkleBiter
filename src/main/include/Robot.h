@@ -6,6 +6,7 @@
 
 #include <string>
 #include <list>
+#include <iostream>
 
 #include "Arm.h"
 #include "Roller.h"
