@@ -9,8 +9,10 @@
 
 void Robot::RobotInit()
 {
-  m_chooser.SetDefaultOption(kAutoNameDefault, kAutoNameDefault);
-  m_chooser.AddOption(kAutoNameCustom, kAutoNameCustom);
+  m_chooser.AddOption(kScoreDoNothing, kScoreDoNothing);
+  m_chooser.AddOption(kScoreGoBack, kScoreGoBack);
+  m_chooser.AddOption(kScoreBalance, kScoreBalance);
+  m_chooser.AddOption(kScoreCrossLineBalance, kScoreCrossLineBalance);
   frc::SmartDashboard::PutData("Auto Modes", &m_chooser);
 #ifndef CFG_NO_DRIVEBASE
   m_drivetrain.init();
@@ -43,47 +45,51 @@ void Robot::AutonomousInit()
 {
 #ifndef CFG_NO_DRIVEBASE
   m_odometry.update();
-  m_drivetrain.flip();
+  //m_drivetrain.flip();
 #endif
+
   m_autoSelected = m_chooser.GetSelected();
   // m_autoSelected = SmartDashboard::GetString("Auto Selector",
   //     kAutoNameDefault);
   fmt::print("Auto selected: {}\n", m_autoSelected);
-
-  if(m_autoSelected == kAutoNameCustom)
+    m_score_timer.Start();
+  if(m_autoSelected == "Score Go Back")
     {
-      // Custom Auto goes here
+      m_auto_sequence = &score_go_back;
+      std::cout << "Score Go Back \n";
     }
-  else
+  else if(m_autoSelected == "Score do nothing")
     {
-      // Default Auto goes here
+      m_auto_sequence = &score_do_nothing;
+      std::cout << "Score do nothing \n";
     }
+  else if(m_autoSelected == "Score Balance")
+    {
+      m_auto_sequence = &score_balance;
+      std::cout << "Score Balance \n";
+    }
+  else if(m_autoSelected == "Score cross line balance")
+    {
+      m_auto_sequence = &score_cross_line_bal;
+      std::cout << "Score cross line balance \n";
+    }
+    
+    // m_fallback_traj = m_trajectory.generate_live_traj(
+    //   m_trajectory.fall_back(CONSTANTS::TRAJECTORY::fall_back_center));
+    //   m_trajectory.init_live_traj(m_fallback_traj);
 }
 
 void Robot::AutonomousPeriodic()
 {
-  /*
-  if(m_autoSelected == "Score Go Back")
-    {
-      m_auto_sequence = score_go_back;
-    }
-  else if(m_autoSelected == "Score do nothing")
-    {
-      m_auto_sequence = score_do_nothing;
-    }
-  else if(m_autoSelected == "Score Balance")
-    {
-      m_auto_sequence = score_balance;
-    }
-  else if(m_autoSelected == "Score cross line balance")
-    {
-      m_auto_sequence = score_cross_line_bal;
-    }
-  m_action = m_auto_sequence.front();
+  m_odometry.update();
+  m_odometry.putField2d();
+
+
+  m_action = m_auto_sequence->front();
   switch(m_action)
     {
     case CONSTANTS::AUTO_ACTIONS::NOTHING:
-
+      std::cout << "Do nothing! \n";
       break;
 
     case CONSTANTS::AUTO_ACTIONS::BALANCE:
@@ -98,36 +104,45 @@ void Robot::AutonomousPeriodic()
       break;
 
     case CONSTANTS::AUTO_ACTIONS::CROSS_LINE:
+      std::cout << "Cross line! \n";
       m_fallback_traj = m_trajectory.generate_live_traj(
-          m_trajectory.fall_back(CONSTANTS::TRAJECTORY::fall_back_dist));
+      m_trajectory.fall_back(CONSTANTS::TRAJECTORY::fall_back_dist));
       m_trajectory.init_live_traj(m_fallback_traj);
-      m_action = CONSTANTS::AUTO_ACTIONS::CROSS_LINE_P;
+      m_auto_sequence->push_front(CONSTANTS::AUTO_ACTIONS::CROSS_LINE_P);
       break;
 
     case CONSTANTS::AUTO_ACTIONS::CROSS_LINE_P:
+      std::cout << "Cross line P! \n";
       if(m_trajectory.follow_live_traj(m_fallback_traj))
         {
-          m_auto_sequence.pop_front();
+          m_auto_sequence->pop_front();
+          m_auto_sequence->push_front(CONSTANTS::AUTO_ACTIONS::NOTHING);
+
         }
 
       break;
 
     case CONSTANTS::AUTO_ACTIONS::SCORE:
-      m_score_timer.Start();
+      std::cout << "Score! \n";
       if(m_score_timer.Get() <= 0.5_s)
         {
           m_roller.spin(1);
         }
       else
         {
-          m_auto_sequence.pop_front();
+          std::cout << "Time reached \n";
+          m_auto_sequence->pop_front();
+          m_action = m_auto_sequence->front();
+          m_roller.spin(0);
+          // m_score_timer.Stop();
+          // m_score_timer.Reset();
         }
       break;
 
     default:
       break;
     }
-    */
+
 }
 
 void Robot::TeleopInit()
@@ -140,12 +155,16 @@ void Robot::TeleopInit()
 void Robot::swerveDrive(bool const &field_relative)
 {
 #ifndef CFG_NO_DRIVEBASE
+ frc::SmartDashboard::PutNumber("Pitch", m_drivetrain.get_pitch());
+ frc::SmartDashboard::PutNumber("X", m_drivetrain.acc.GetX());
+ frc::SmartDashboard::PutNumber("Y", m_drivetrain.acc.GetY());
+  frc::SmartDashboard::PutNumber("Z", m_drivetrain.acc.GetZ());
+
 
 if (BUTTON::stick.GetStartButtonReleased())
 {
   m_drivetrain.zero_yaw();
 }
-
   const units::meters_per_second_t left_right{ -(frc::ApplyDeadband(
       BUTTON::DRIVETRAIN::LX(), CONSTANTS::DEADBAND)) * CONSTANTS::DRIVE::TELEOP_MAX_SPEED };
 

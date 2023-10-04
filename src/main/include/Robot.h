@@ -45,9 +45,10 @@ private:
   frc::Timer m_score_timer;
   void swerveDrive(bool const &field_relative);
   frc::SendableChooser<std::string> m_chooser;
-  const std::string kAutoNameDefault = "Default";
-  const std::string kAutoNameCustom = "My Auto";
-  std::list<CONSTANTS::AUTO_ACTIONS> m_auto_sequence;
+  const std::string kScoreGoBack = "Score Go Back";
+  const std::string kScoreDoNothing = "Score do nothing";
+  const std::string kScoreBalance = "Score Balance";
+  const std::string kScoreCrossLineBalance = "Score cross line balance";
 // Score balance 
 // Score Cross line balance
 std::list <CONSTANTS::AUTO_ACTIONS> score_balance {
@@ -71,8 +72,11 @@ std::list<CONSTANTS::AUTO_ACTIONS> score_do_nothing {
   std::list<CONSTANTS::AUTO_ACTIONS> score_go_back {
     CONSTANTS::AUTO_ACTIONS::SCORE,
     CONSTANTS::AUTO_ACTIONS::CROSS_LINE,
+    CONSTANTS::AUTO_ACTIONS::CROSS_LINE_P,
     CONSTANTS::AUTO_ACTIONS::NOTHING,
   };
+  
+  std::list<CONSTANTS::AUTO_ACTIONS> *m_auto_sequence;
 
   std::string m_autoSelected;
   CONSTANTS::AUTO_ACTIONS m_action = CONSTANTS::AUTO_ACTIONS::NOTHING;

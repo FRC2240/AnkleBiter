@@ -38,7 +38,7 @@ Odometry::Odometry(Drivetrain* drivetrain)
 {}
 void Odometry::putField2d()
 {
-    // frc::SmartDashboard::PutData("Odometry Field", &field2d);
+    frc::SmartDashboard::PutData("Odometry Field", &field2d);
 }
 
 void Odometry::update()

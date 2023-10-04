@@ -37,6 +37,11 @@ Drivetrain::Drivetrain(){
 
  }
 
+double Drivetrain::get_pitch() 
+{
+ return (double)navx.GetPitch();
+}
+
 void Drivetrain::flip()
 {
   //navx.ZeroYaw();

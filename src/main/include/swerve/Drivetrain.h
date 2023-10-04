@@ -16,6 +16,7 @@
 #include <frc/smartdashboard/SmartDashboard.h>
 #include <AHRS.h>
 #include <frc/SPI.h>
+#include <frc/BuiltInAccelerometer.h>
 
 #include <iostream>
 #include <fmt/format.h>
@@ -24,12 +25,15 @@
 class Drivetrain
 {
     public:
+    frc::BuiltInAccelerometer acc;
     Drivetrain();
 
     /// @brief Flips the perspective of the drivetrain, so it rotates it's pose by 180 degrees.
     void flip();
     /// @brief Resets the navx so it's current orentation becomes 0 degrees
     void zero_yaw();
+
+    double get_pitch();
     
     void print_angle();
 
