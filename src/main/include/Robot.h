@@ -83,8 +83,12 @@ std::list<CONSTANTS::AUTO_ACTIONS> score_do_nothing {
   CONSTANTS::STATE m_state = CONSTANTS::STATE::STOWED;
   bool m_stowed_toggle = true;
   bool m_intake_toggle = false;
-  bool m_extake_toggle = false;
+  bool m_extake_low_toggle = false;
+  bool m_extake_mid_toggle = false;
+  bool m_extake_high_toggle = false;
   bool m_man_intake_toggle = false;
+   bool m_man_extake_toggle = false;
+
   pathplanner::PathPlannerTrajectory m_fallback_traj;
   Arm m_arm;
   autoBalance m_auto_balence;

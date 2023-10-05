@@ -19,9 +19,10 @@ namespace CONSTANTS
   {
   STOWED,
   INTAKE,
-  EXTAKE,
+  EXTAKE_LOW,
   MAN_INTAKE,
-
+  EXTAKE_MID,
+  EXTAKE_HIGH
 };
 
 enum class AUTO_ACTIONS{
@@ -59,10 +60,12 @@ namespace ARM
   constexpr double STEP = 10;
   constexpr int LEFT_MOTOR_ID = 1;
   constexpr int RIGHT_MOTOR_ID = 2;
-  constexpr double INTAKE_VEL = 0.25;
+  constexpr double INTAKE_VEL = 0.60;
   constexpr double STORE_POS = 0.952; 
   constexpr double INTAKE_POS = 0.476; 
-  constexpr double SCORE_POS = STORE_POS;
+  constexpr double SCORE_POS_LOW = STORE_POS;
+  constexpr double SCORE_POS_MID = 0.880;
+  constexpr double SCORE_POS_HIGH = 0.700;
 
 }
 
@@ -83,7 +86,7 @@ namespace ARM
     constexpr units::meters_per_second_t ROBOT_MAX_SPEED =  18.533_fps;
     constexpr units::radians_per_second_t ROBOT_MAX_ANGULAR_SPEED{std::numbers::pi*1.25};
     constexpr units::meters_per_second_t TELEOP_MAX_SPEED = ROBOT_MAX_SPEED;
-    constexpr units::radians_per_second_t TELEOP_MAX_ANGULAR_SPEED{std::numbers::pi*1.25};
+    constexpr units::radians_per_second_t TELEOP_MAX_ANGULAR_SPEED{std::numbers::pi*2.25};
     constexpr units::meters_per_second_t TRAJ_MAX_SPEED = ROBOT_MAX_SPEED;
     constexpr units::acceleration::meters_per_second_squared_t TRAJ_MAX_ACCELERATION = TRAJ_MAX_SPEED / 0.5_s;
     constexpr units::radians_per_second_t TRAJ_MAX_ANGULAR_SPEED = CONSTANTS::DRIVE::ROBOT_MAX_ANGULAR_SPEED;
