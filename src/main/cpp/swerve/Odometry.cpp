@@ -43,7 +43,7 @@ void Odometry::putField2d()
 
 void Odometry::update()
 {
-    frc::Pose2d const pose = odometry.Update(m_drivetrain->getCCWHeading(),
+    odometry.Update(m_drivetrain->getCCWHeading(),
                                              m_drivetrain->getModulePositions());
     // if constexpr (CONSTANTS::DEBUGGING)
         // frc::SmartDashboard::PutString("Odometry: ", fmt::format("Pose X: {}, Y: {}, Z (Degrees): {}\n", pose.X().value(), pose.Y().value(), pose.Rotation().Degrees().value()));

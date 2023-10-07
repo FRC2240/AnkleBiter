@@ -16,6 +16,9 @@
         "open": true
       },
       "SmartDashboard": {
+        "dbg": {
+          "open": true
+        },
         "open": true
       }
     },

@@ -179,6 +179,9 @@ case CONSTANTS::AUTO_ACTIONS::SCORE_MID:
 
 void Robot::TeleopInit()
 {
+    frc::SmartDashboard::PutBoolean("dbg/snap_zero", false);
+frc::SmartDashboard::PutBoolean("dbg/bool_snap_angle", false);
+frc::SmartDashboard::PutNumber("dbg/val_snap_angle", 0.0);
 #ifndef CFG_NO_DRIVEBASE
   m_odometry.update();
 #endif
@@ -191,6 +194,7 @@ void Robot::swerveDrive(bool const &field_relative)
  frc::SmartDashboard::PutNumber("X", m_drivetrain.acc.GetX());
  frc::SmartDashboard::PutNumber("Y", m_drivetrain.acc.GetY());
   frc::SmartDashboard::PutNumber("Z", m_drivetrain.acc.GetZ());
+  frc::SmartDashboard::PutNumber("gryo", m_drivetrain.getAngle().value());
 
 
 if (BUTTON::stick.GetStartButtonReleased())
@@ -224,7 +228,8 @@ void Robot::TeleopPeriodic()
 
   if (frc::SmartDashboard::GetBoolean("dbg/snap_zero", false) == true)
   {
-    m_drivetrain.snap_to_zero();
+    // m_drivetrain.snap_to_zero();
+    m_drivetrain.face_direction(0_deg);
   }
   
   if (frc::SmartDashboard::GetBoolean("dbg/bool_snap_angle",false) == true)

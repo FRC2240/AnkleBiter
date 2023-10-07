@@ -313,6 +313,33 @@ void Drivetrain::faceDirection(
   drive(dx, dy, units::degrees_per_second_t{ -p_rotation }, field_relative);
 }
 
+bool Drivetrain::face_direction(units::degree_t tgt, double feedback_device)
+{
+  turn_pid.SetSetpoint(tgt.value());
+  double pid_out = turn_pid.Calculate(feedback_device);
+  drive(0_mps, 0_mps, units::degrees_per_second_t{ pid_out }, false);
+  if ((feedback_device >= turn_pid.GetSetpoint()-1) && (feedback_device <= turn_pid.GetSetpoint()+1)){
+    return true;
+  }
+  else {
+    return false;
+  }
+}
+
+bool Drivetrain::face_direction(units::degree_t tgt)
+{
+  auto angle = getAngle().value();
+  turn_pid.SetSetpoint(tgt.value());
+  double pid_out = turn_pid.Calculate(angle);
+  drive(0_mps, 0_mps, units::degrees_per_second_t{ pid_out }, false);
+  if ((angle >= turn_pid.GetSetpoint()-1) && (angle <= turn_pid.GetSetpoint()+1)){
+    return true;
+  }
+  else {
+    return false;
+  }
+}
+
 void Drivetrain::faceClosest(units::meters_per_second_t const &dx,
                              units::meters_per_second_t const &dy,
                              bool const &field_relative, double const &rot_p,

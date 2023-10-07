@@ -145,8 +145,13 @@ public:
                      units::degrees_per_second_t const &max_rot_speed
                      = TELEOP_MAX_ANGULAR_SPEED);
     
-    // This function is different from the camelCase version due to less arguments, better PID control and non-overidden defaults. This function is reccomended 
-    void face_direction(units::degree_t tgt);
+    // This function is different from the camelCase version due to less arguments, better PID control and non-overidden defaults. This function is reccomended over the old one
+    // Use this one when you need a feedback device that isn't the gyro (i.e vision)
+    bool face_direction(units::degree_t tgt, double feedback_device);
+
+    // Use this one when you want to use the gryo (i.e, snapping to a static point)
+    bool face_direction(units::degree_t tgt);
+
     
 
         void faceClosest(units::meters_per_second_t const &dx,
