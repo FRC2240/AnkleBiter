@@ -32,11 +32,19 @@ namespace BUTTON{
         return stick.GetLeftBumperReleased();
     }
     
-    inline bool EXTAKE(){
+    inline bool EXTAKE_LOW(){
         return stick.GetRightBumperReleased();
     }
 
-    inline bool MAN_INTAKE(){
+    inline bool EXTAKE_MID(){
+        return stick.GetAButtonReleased();
+    }
+
+    inline bool EXTAKE_HIGH(){
+        return stick.GetYButtonReleased();
+    }
+
+    inline bool EXECUTE_EXTAKE(){
         return stick.GetXButtonReleased();
     }
 }

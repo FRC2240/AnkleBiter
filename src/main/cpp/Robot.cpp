@@ -191,35 +191,51 @@ void Robot::TeleopPeriodic()
     {
       m_stowed_toggle = !m_stowed_toggle;
       m_intake_toggle = 0;
-      m_man_intake_toggle = 0;
-      m_extake_toggle = 0;
+      m_extake_low_toggle = 0;
+      m_extake_mid_toggle = 0;
+      m_extake_high_toggle = 0;
+
     }
   if(BUTTON::INTAKE())
     {
       m_stowed_toggle = 0;
       m_intake_toggle = !m_intake_toggle;
-      m_man_intake_toggle = 0;
-      m_extake_toggle = 0;
+      m_extake_low_toggle = 0;
+      m_extake_mid_toggle = 0;
+      m_extake_high_toggle = 0;
+
     }
-  if(BUTTON::MAN_INTAKE())
+  if(BUTTON::EXTAKE_LOW())
     {
       m_stowed_toggle = 0;
       m_intake_toggle = 0;
-      m_man_intake_toggle = !m_man_intake_toggle;
-      m_extake_toggle = 0;
+      m_extake_low_toggle = !m_extake_low_toggle;
+      m_extake_mid_toggle = 0;
+      m_extake_high_toggle = 0;
+      m_score_timer.Reset();
     }
-  if(BUTTON::EXTAKE())
+  if(BUTTON::EXTAKE_MID())
     {
       m_stowed_toggle = 0;
       m_intake_toggle = 0;
-      m_man_intake_toggle = 0;
-      m_extake_toggle = !m_extake_toggle;
+      m_extake_low_toggle = 0;
+      m_extake_mid_toggle = !m_extake_mid_toggle;
+      m_extake_high_toggle = 0;
+      m_score_timer.Reset();
+    }
+  if(BUTTON::EXTAKE_HIGH())
+    {
+      m_stowed_toggle = 0;
+      m_intake_toggle = 0;
+      m_extake_high_toggle = !m_extake_high_toggle;
+      m_extake_low_toggle = 0;
+      m_extake_mid_toggle = 0;
       m_score_timer.Reset();
     }
 
-  if(m_extake_toggle)
+  if(m_extake_low_toggle)
     {
-      m_state = CONSTANTS::STATE::EXTAKE;
+      m_state = CONSTANTS::STATE::EXTAKE_LOW;
     }
   if(m_intake_toggle)
     {
@@ -229,10 +245,12 @@ void Robot::TeleopPeriodic()
     {
       m_state = CONSTANTS::STATE::STOWED;
     }
-  if(m_man_intake_toggle)
-    {
-      m_state = CONSTANTS::STATE::MAN_INTAKE;
-    }
+  if(m_extake_mid_toggle){
+    m_state = CONSTANTS::STATE::EXTAKE_MID;
+  }
+  if(m_extake_high_toggle){
+    m_state = CONSTANTS::STATE::EXTAKE_HIGH;
+  }
   switch(m_state)
     {
     case CONSTANTS::STATE::STOWED:
@@ -242,11 +260,7 @@ void Robot::TeleopPeriodic()
     frc::SmartDashboard::PutString("state", "stowed");
 
       break;
-    case CONSTANTS::STATE::MAN_INTAKE: // NOTE: No specific code needs to be
-                                       // written for man intake. If the state
-                                       // is man intake, is_loaded will always
-                                       // return false.
-                                       // Fallthrough (lack of break) intended.
+
     case CONSTANTS::STATE::INTAKE:
     frc::SmartDashboard::PutString("state", "intake");
       m_arm.move(CONSTANTS::ARM::INTAKE_POS);
@@ -260,9 +274,9 @@ void Robot::TeleopPeriodic()
         }
       break;
 
-    case CONSTANTS::STATE::EXTAKE:
-      m_arm.move(CONSTANTS::ARM::SCORE_POS);
-      m_roller.spin(-1);
+    case CONSTANTS::STATE::EXTAKE_LOW:
+      m_arm.move(CONSTANTS::ARM::SCORE_POS_LOW);
+      m_roller.spin(-0.35);
       m_score_timer.Start();
       
         if(m_score_timer.Get() > units::time::second_t(0.5)) 
@@ -270,10 +284,46 @@ void Robot::TeleopPeriodic()
           m_score_timer.Stop();
           m_score_timer.Reset();
           m_state = CONSTANTS::STATE::STOWED;
-          m_extake_toggle = !m_extake_toggle;
+          m_extake_low_toggle = !m_extake_low_toggle;
         }
       break;
+
+      case CONSTANTS::STATE::EXTAKE_MID:
+      m_arm.move(CONSTANTS::ARM::SCORE_POS_MID);
+      m_score_timer.Start();
+
+        if(m_score_timer.Get() > units::time::second_t(1.0)) 
+        {
+          m_roller.spin(-1);
+        }
+        if(m_score_timer.Get() > units::time::second_t(1.5))
+        {
+          m_score_timer.Stop();
+          m_score_timer.Reset();
+          m_state = CONSTANTS::STATE::STOWED;
+          m_extake_mid_toggle = !m_extake_mid_toggle;
+        }
+      break;
+
+      case CONSTANTS::STATE::EXTAKE_HIGH:
+      m_arm.move(CONSTANTS::ARM::SCORE_POS_HIGH);
+
+        if(BUTTON::EXECUTE_EXTAKE()) 
+        {
+          m_score_timer.Start();
+          m_roller.spin(-1);
+        }
+        if(m_score_timer.Get() > units::time::second_t(0.5)) 
+        {
+          m_score_timer.Stop();
+          m_score_timer.Reset();
+          m_state = CONSTANTS::STATE::STOWED;
+          m_extake_high_toggle = !m_extake_high_toggle;
+        }
+      break;
+
     }
+    
 
 }
 
