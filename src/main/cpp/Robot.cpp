@@ -216,7 +216,25 @@ if (BUTTON::stick.GetStartButtonReleased())
 
 void Robot::TeleopPeriodic()
 {
+<<<<<<< HEAD
   frc::SmartDashboard::PutNumber("navx", m_drivetrain.getAngle().value());
+||||||| parent of 57f841c (started on better pid)
+  
+=======
+
+  if (frc::SmartDashboard::GetBoolean("dbg/snap_zero", false) == true)
+  {
+    m_drivetrain.snap_to_zero();
+  }
+  
+  if (frc::SmartDashboard::GetBoolean("dbg/bool_snap_angle",false) == true)
+  {
+    units::degree_t angle {frc::SmartDashboard::GetNumber("dbg/val_snap_angle", 0.0)};
+    m_drivetrain.faceDirection(0_mps, 0_mps, angle, false, 0.0);
+  }
+  
+  
+>>>>>>> 57f841c (started on better pid)
   Robot::swerveDrive(true);
 
   if(BUTTON::STOWED())
