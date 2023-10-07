@@ -86,8 +86,6 @@ std::list<CONSTANTS::AUTO_ACTIONS> score_do_nothing {
   bool m_extake_low_toggle = false;
   bool m_extake_mid_toggle = false;
   bool m_extake_high_toggle = false;
-  bool m_man_intake_toggle = false;
-   bool m_man_extake_toggle = false;
 
   pathplanner::PathPlannerTrajectory m_fallback_traj;
   Arm m_arm;
