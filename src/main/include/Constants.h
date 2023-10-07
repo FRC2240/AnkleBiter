@@ -34,7 +34,7 @@ enum class AUTO_ACTIONS{
   CENTER_CROSS_LINE,
   CENTER_CROSS_LINE_P,
 };
-constexpr double FF_SPEED = 0.0225;
+constexpr double FF_SPEED = 0.05;
   constexpr int XBOX_PORT = 0;
   constexpr int AUX_XBOX_PORT = 1;
   constexpr double NON_TURBO = 1;

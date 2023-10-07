@@ -255,7 +255,6 @@ void Robot::TeleopPeriodic()
     {
     case CONSTANTS::STATE::STOWED:
       m_arm.move(CONSTANTS::ARM::STORE_POS);
-      m_roller.spin(CONSTANTS::ROLLER::SLOW);
       m_roller.spin(CONSTANTS::FF_SPEED);
     frc::SmartDashboard::PutString("state", "stowed");
 
