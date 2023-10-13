@@ -19,8 +19,8 @@ namespace CONSTANTS
   {
   STOWED,
   INTAKE,
+  INTAKE_OVERIDE,
   EXTAKE_LOW,
-  MAN_INTAKE,
   EXTAKE_MID,
   EXTAKE_HIGH
 };
@@ -65,7 +65,7 @@ namespace ARM
   constexpr double INTAKE_POS = 0.476; 
   constexpr double SCORE_POS_LOW = STORE_POS;
   constexpr double SCORE_POS_MID = 0.880;
-  constexpr double SCORE_POS_HIGH = 0.700;
+  constexpr double SCORE_POS_HIGH = 0.7250;
 
 }
 
@@ -95,8 +95,8 @@ namespace ARM
 
   namespace TRAJECTORY
   {
-    constexpr units::meter_t fall_back_dist {1.0};
-    constexpr units::meter_t fall_back_center {2.0};
+    constexpr units::meter_t fall_back_dist {3.81};
+    constexpr units::meter_t fall_back_center {4.72};
     constexpr auto HP_VEL = 0.4_mps;
     constexpr units::meter_t SIMPLE_FORWARDS = -22_in; //CHANGEME
     const std::vector<units::meter_t> Y_POS =

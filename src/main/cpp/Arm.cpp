@@ -3,6 +3,8 @@
 #include <iostream>
 
 Arm::Arm() {
+    m_left_arm_motor.SetSmartCurrentLimit(50);
+    m_right_arm_motor.SetSmartCurrentLimit(50);
 
     m_arm_pid.SetP(m_arm_coeff.p);
     m_arm_pid.SetD(m_arm_coeff.d);
