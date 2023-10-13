@@ -13,6 +13,8 @@ void Robot::RobotInit()
   m_chooser.AddOption(kScoreGoBack, kScoreGoBack);
   m_chooser.AddOption(kScoreBalance, kScoreBalance);
   m_chooser.AddOption(kScoreCrossLineBalance, kScoreCrossLineBalance);
+  m_chooser.AddOption(kScoreMidDoNothing, kScoreMidDoNothing);
+  m_chooser.AddOption(kScoreMidCrossLine, kScoreMidCrossLine);
   frc::SmartDashboard::PutData("Auto Modes", &m_chooser);
 #ifndef CFG_NO_DRIVEBASE
   m_drivetrain.init();
@@ -72,6 +74,16 @@ void Robot::AutonomousInit()
     {
       m_auto_sequence = &score_cross_line_bal;
       std::cout << "Score cross line balance \n";
+    }
+  else if (m_autoSelected == "Score mid, do nothing")
+    {
+      m_auto_sequence = &score_mid_do_nothing;
+      std::cout << "Score mid do nothing \n";
+    }
+  else if (m_autoSelected == "Score mid, cross line")
+    {
+      m_auto_sequence = &score_mid_cross_line;
+      std::cout << "Score mid cross line \n";
     }
     
     // m_fallback_traj = m_trajectory.generate_live_traj(
@@ -137,6 +149,41 @@ void Robot::AutonomousPeriodic()
           // m_score_timer.Stop();
           // m_score_timer.Reset();
         }
+      break;
+
+      case CONSTANTS::AUTO_ACTIONS::CROSS_LINE_BACK:
+        std::cout << "Cross line! \n";
+        m_fallback_traj = m_trajectory.generate_live_traj(
+        m_trajectory.fall_back(-CONSTANTS::TRAJECTORY::fall_back_dist));
+        m_trajectory.init_live_traj(m_fallback_traj);
+        m_auto_sequence->push_front(CONSTANTS::AUTO_ACTIONS::CROSS_LINE_BACK_P);
+      break;
+
+      case CONSTANTS::AUTO_ACTIONS::CROSS_LINE_BACK_P:
+        std::cout << "Cross line P! \n";
+        if(m_trajectory.follow_live_traj(m_fallback_traj))
+          {
+            m_auto_sequence->pop_front();
+            m_auto_sequence->push_front(CONSTANTS::AUTO_ACTIONS::NOTHING);
+
+          }
+
+      break;
+
+case CONSTANTS::AUTO_ACTIONS::SCORE_MID:
+  std::cout << "Mid Score! \n"; 
+   m_arm.move(CONSTANTS::ARM::SCORE_POS_HIGH);
+   if (m_score_timer.Get() > 1.0_s) {
+      m_roller.spin(-1);
+   }
+  if(m_score_timer.Get() >= 1.5_s) {
+      std::cout << "Time reached \n";
+      m_auto_sequence->pop_front();
+      m_action = m_auto_sequence->front();
+      m_roller.spin(0);
+      // m_score_timer.Stop();
+      // m_score_timer.Reset();
+    }
       break;
 
     default:

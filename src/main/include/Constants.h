@@ -33,6 +33,9 @@ enum class AUTO_ACTIONS{
   BALANCE,
   CENTER_CROSS_LINE,
   CENTER_CROSS_LINE_P,
+  SCORE_MID,
+  CROSS_LINE_BACK,
+  CROSS_LINE_BACK_P
 };
 constexpr double FF_SPEED = 0.05;
   constexpr int XBOX_PORT = 0;
@@ -65,7 +68,7 @@ namespace ARM
   constexpr double INTAKE_POS = 0.476; 
   constexpr double SCORE_POS_LOW = STORE_POS;
   constexpr double SCORE_POS_MID = 0.880;
-  constexpr double SCORE_POS_HIGH = 0.7250;
+  constexpr double SCORE_POS_HIGH = 0.73;
 
 }
 
