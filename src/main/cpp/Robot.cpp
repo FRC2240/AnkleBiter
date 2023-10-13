@@ -151,24 +151,24 @@ void Robot::AutonomousPeriodic()
         }
       break;
 
-      case CONSTANTS::AUTO_ACTIONS::CROSS_LINE_BACK:
-        std::cout << "Cross line! \n";
-        m_fallback_traj = m_trajectory.generate_live_traj(
-        m_trajectory.fall_back(-CONSTANTS::TRAJECTORY::fall_back_dist));
-        m_trajectory.init_live_traj(m_fallback_traj);
-        m_auto_sequence->push_front(CONSTANTS::AUTO_ACTIONS::CROSS_LINE_BACK_P);
-      break;
+      // case CONSTANTS::AUTO_ACTIONS::CROSS_LINE_BACK:
+      //   std::cout << "Cross line! \n";
+      //   m_fallback_traj = m_trajectory.generate_live_traj(
+      //   m_trajectory.fall_back(-CONSTANTS::TRAJECTORY::fall_back_dist));
+      //   m_trajectory.init_live_traj(m_fallback_traj);
+      //   m_auto_sequence->push_front(CONSTANTS::AUTO_ACTIONS::CROSS_LINE_BACK_P);
+      // break;
 
-      case CONSTANTS::AUTO_ACTIONS::CROSS_LINE_BACK_P:
-        std::cout << "Cross line P! \n";
-        if(m_trajectory.follow_live_traj(m_fallback_traj))
-          {
-            m_auto_sequence->pop_front();
-            m_auto_sequence->push_front(CONSTANTS::AUTO_ACTIONS::NOTHING);
+      // case CONSTANTS::AUTO_ACTIONS::CROSS_LINE_BACK_P:
+      //   std::cout << "Cross line P! \n";
+      //   if(m_trajectory.follow_live_traj(m_fallback_traj))
+      //     {
+      //       m_auto_sequence->pop_front();
+      //       m_auto_sequence->push_front(CONSTANTS::AUTO_ACTIONS::NOTHING);
 
-          }
+      //     }
 
-      break;
+      // break;
 
 case CONSTANTS::AUTO_ACTIONS::SCORE_MID:
   std::cout << "Mid Score! \n"; 
@@ -181,6 +181,7 @@ case CONSTANTS::AUTO_ACTIONS::SCORE_MID:
       m_auto_sequence->pop_front();
       m_action = m_auto_sequence->front();
       m_roller.spin(0);
+      m_drivetrain.flip();
       // m_score_timer.Stop();
       // m_score_timer.Reset();
     }
