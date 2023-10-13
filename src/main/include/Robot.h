@@ -49,6 +49,9 @@ private:
   const std::string kScoreDoNothing = "Score do nothing";
   const std::string kScoreBalance = "Score Balance";
   const std::string kScoreCrossLineBalance = "Score cross line balance";
+  const std::string kScoreMidDoNothing = "Score mid, do nothing";
+  const std::string kScoreMidCrossLine = "Score mid, cross line";
+
 // Score balance 
 // Score Cross line balance
 std::list <CONSTANTS::AUTO_ACTIONS> score_balance {
@@ -73,6 +76,17 @@ std::list<CONSTANTS::AUTO_ACTIONS> score_do_nothing {
     CONSTANTS::AUTO_ACTIONS::SCORE,
     CONSTANTS::AUTO_ACTIONS::CROSS_LINE,
     CONSTANTS::AUTO_ACTIONS::CROSS_LINE_P,
+    CONSTANTS::AUTO_ACTIONS::NOTHING,
+  };
+
+  std::list<CONSTANTS::AUTO_ACTIONS> score_mid_do_nothing {
+    CONSTANTS::AUTO_ACTIONS::SCORE_MID,
+    CONSTANTS::AUTO_ACTIONS::NOTHING,
+  };
+  std::list<CONSTANTS::AUTO_ACTIONS> score_mid_cross_line {
+    CONSTANTS::AUTO_ACTIONS::SCORE_MID,
+    CONSTANTS::AUTO_ACTIONS::CROSS_LINE_BACK,
+    CONSTANTS::AUTO_ACTIONS::CROSS_LINE_BACK_P,
     CONSTANTS::AUTO_ACTIONS::NOTHING,
   };
   
