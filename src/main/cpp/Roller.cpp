@@ -3,6 +3,8 @@
 Roller::Roller(CONSTANTS::STATE &state)
 : m_state {state}
 {
+    m_right_roller_motor.SetSmartCurrentLimit(40);
+    m_left_roller_motor.SetSmartCurrentLimit(40);
     m_right_roller_motor.Follow(m_left_roller_motor, true);
 
 }
@@ -20,7 +22,6 @@ bool Roller::is_loaded()
 {
     frc::SmartDashboard::PutNumber("range", m_tof_sensor.GetRange());
     return (
-        (m_state != CONSTANTS::STATE::MAN_INTAKE) &&
         (units::millimeter_t {m_tof_sensor.GetRange()} < CONSTANTS::ROLLER::LOADED_RANGE)
     );
 }

@@ -126,7 +126,7 @@ void Robot::AutonomousPeriodic()
       std::cout << "Score! \n";
       if(m_score_timer.Get() <= 0.5_s)
         {
-          m_roller.spin(1);
+          m_roller.spin(-0.35);
         }
       else
         {
@@ -191,6 +191,7 @@ void Robot::TeleopPeriodic()
     {
       m_stowed_toggle = !m_stowed_toggle;
       m_intake_toggle = 0;
+      m_intake_overide_toggle = 0;
       m_extake_low_toggle = 0;
       m_extake_mid_toggle = 0;
       m_extake_high_toggle = 0;
@@ -200,6 +201,7 @@ void Robot::TeleopPeriodic()
     {
       m_stowed_toggle = 0;
       m_intake_toggle = !m_intake_toggle;
+      m_intake_overide_toggle = 0;
       m_extake_low_toggle = 0;
       m_extake_mid_toggle = 0;
       m_extake_high_toggle = 0;
@@ -209,6 +211,7 @@ void Robot::TeleopPeriodic()
     {
       m_stowed_toggle = 0;
       m_intake_toggle = 0;
+      m_intake_overide_toggle = 0;
       m_extake_low_toggle = !m_extake_low_toggle;
       m_extake_mid_toggle = 0;
       m_extake_high_toggle = 0;
@@ -218,6 +221,7 @@ void Robot::TeleopPeriodic()
     {
       m_stowed_toggle = 0;
       m_intake_toggle = 0;
+      m_intake_overide_toggle = 0;
       m_extake_low_toggle = 0;
       m_extake_mid_toggle = !m_extake_mid_toggle;
       m_extake_high_toggle = 0;
@@ -227,10 +231,20 @@ void Robot::TeleopPeriodic()
     {
       m_stowed_toggle = 0;
       m_intake_toggle = 0;
+      m_intake_overide_toggle = 0;
       m_extake_high_toggle = !m_extake_high_toggle;
       m_extake_low_toggle = 0;
       m_extake_mid_toggle = 0;
       m_score_timer.Reset();
+    }
+  if(BUTTON::INTAKE_OVERIDE())
+    {
+      m_stowed_toggle = 0;
+      m_intake_toggle = 0;
+      m_intake_overide_toggle = !m_intake_overide_toggle;
+      m_extake_low_toggle = 0;
+      m_extake_mid_toggle = 0;
+      m_extake_high_toggle = 0;
     }
 
   if(m_extake_low_toggle)
@@ -250,6 +264,9 @@ void Robot::TeleopPeriodic()
   }
   if(m_extake_high_toggle){
     m_state = CONSTANTS::STATE::EXTAKE_HIGH;
+  }
+  if(m_intake_overide_toggle){
+    m_state = CONSTANTS::STATE::INTAKE_OVERIDE;
   }
   switch(m_state)
     {
@@ -271,6 +288,12 @@ void Robot::TeleopPeriodic()
           m_stowed_toggle = 1;
           m_state = CONSTANTS::STATE::STOWED;
         }
+      break;
+
+    case CONSTANTS::STATE::INTAKE_OVERIDE:
+      frc::SmartDashboard::PutString("state", "intake");
+      m_arm.move(CONSTANTS::ARM::INTAKE_POS);
+      m_roller.spin(CONSTANTS::ARM::INTAKE_VEL); 
       break;
 
     case CONSTANTS::STATE::EXTAKE_LOW:

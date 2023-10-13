@@ -31,6 +31,10 @@ namespace BUTTON{
     inline bool INTAKE(){
         return stick.GetLeftBumperReleased();
     }
+
+    inline bool INTAKE_OVERIDE(){
+        return stick.GetPOV() == 270;
+    }
     
     inline bool EXTAKE_LOW(){
         return stick.GetRightBumperReleased();
