@@ -11,7 +11,7 @@ Arm::Arm() {
     m_arm_pid.SetOutputRange(m_arm_coeff.min, m_arm_coeff.max);
     std::cout << "P: " << m_arm_coeff.p << "\n";
    m_right_arm_motor.Follow(m_left_arm_motor, true);
-   m_arm_encoder.SetZeroOffset(0.9);
+   m_arm_encoder.SetZeroOffset(0.208);
        m_arm_pid.SetFeedbackDevice(m_arm_encoder);
     
 
