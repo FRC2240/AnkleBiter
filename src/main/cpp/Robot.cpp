@@ -101,22 +101,23 @@ void Robot::AutonomousPeriodic()
   switch(m_action)
     {
     case CONSTANTS::AUTO_ACTIONS::NOTHING:
-      std::cout << "Do nothing! \n";
+      //std::cout << "Do nothing! \n";
       break;
 
     case CONSTANTS::AUTO_ACTIONS::BALANCE:
-      m_auto_balence.auto_balance_routine();
+        speed = m_auto_balence.auto_balance_routine();
+        m_drivetrain.faceDirection(-speed * Drivetrain::ROBOT_MAX_SPEED, 0_mps, 180_deg, false, 0.0);
       break;
 
     case CONSTANTS::AUTO_ACTIONS::CENTER_CROSS_LINE:
       m_fallback_traj = m_trajectory.generate_live_traj(
           m_trajectory.fall_back(CONSTANTS::TRAJECTORY::fall_back_center));
       m_trajectory.init_live_traj(m_fallback_traj);
-      m_action = CONSTANTS::AUTO_ACTIONS::CROSS_LINE_P;
+      m_auto_sequence->push_front(CONSTANTS::AUTO_ACTIONS::CROSS_LINE_P);
       break;
 
     case CONSTANTS::AUTO_ACTIONS::CROSS_LINE:
-      std::cout << "Cross line! \n";
+      //std::cout << "Cross line! \n";
       m_fallback_traj = m_trajectory.generate_live_traj(
       m_trajectory.fall_back(CONSTANTS::TRAJECTORY::fall_back_dist));
       m_trajectory.init_live_traj(m_fallback_traj);
@@ -124,25 +125,23 @@ void Robot::AutonomousPeriodic()
       break;
 
     case CONSTANTS::AUTO_ACTIONS::CROSS_LINE_P:
-      std::cout << "Cross line P! \n";
+      //std::cout << "Cross line P! \n";
       if(m_trajectory.follow_live_traj(m_fallback_traj))
         {
           m_auto_sequence->pop_front();
           m_auto_sequence->push_front(CONSTANTS::AUTO_ACTIONS::NOTHING);
-
         }
-
       break;
 
     case CONSTANTS::AUTO_ACTIONS::SCORE:
-      std::cout << "Score! \n";
+      //std::cout << "Score! \n";
       if(m_score_timer.Get() <= 0.5_s)
         {
           m_roller.spin(-0.35);
         }
       else
         {
-          std::cout << "Time reached \n";
+          //std::cout << "Time reached \n";
           m_auto_sequence->pop_front();
           m_action = m_auto_sequence->front();
           m_roller.spin(0);
@@ -151,33 +150,31 @@ void Robot::AutonomousPeriodic()
         }
       break;
 
-      // case CONSTANTS::AUTO_ACTIONS::CROSS_LINE_BACK:
-      //   std::cout << "Cross line! \n";
-      //   m_fallback_traj = m_trajectory.generate_live_traj(
-      //   m_trajectory.fall_back(-CONSTANTS::TRAJECTORY::fall_back_dist));
-      //   m_trajectory.init_live_traj(m_fallback_traj);
-      //   m_auto_sequence->push_front(CONSTANTS::AUTO_ACTIONS::CROSS_LINE_BACK_P);
-      // break;
+      case CONSTANTS::AUTO_ACTIONS::BALANCE_CROSS_LINE:
+        //std::cout << "Cross line! \n";
+        m_fallback_traj = m_trajectory.generate_live_traj(
+        m_trajectory.fall_back(CONSTANTS::TRAJECTORY::fall_back_center));
+        m_trajectory.init_live_traj(m_fallback_traj);
+        m_auto_sequence->push_front(CONSTANTS::AUTO_ACTIONS::BALANCE_CROSS_LINE_P);
+      break;
 
-      // case CONSTANTS::AUTO_ACTIONS::CROSS_LINE_BACK_P:
-      //   std::cout << "Cross line P! \n";
-      //   if(m_trajectory.follow_live_traj(m_fallback_traj))
-      //     {
-      //       m_auto_sequence->pop_front();
-      //       m_auto_sequence->push_front(CONSTANTS::AUTO_ACTIONS::NOTHING);
-
-      //     }
-
-      // break;
+      case CONSTANTS::AUTO_ACTIONS::BALANCE_CROSS_LINE_P:
+        //std::cout << "Cross line P! \n";
+        if(m_trajectory.follow_live_traj(m_fallback_traj))
+          {
+            m_auto_sequence->pop_front();
+            m_auto_sequence->push_front(CONSTANTS::AUTO_ACTIONS::BALANCE);
+          }
+      break;
 
 case CONSTANTS::AUTO_ACTIONS::SCORE_MID:
-  std::cout << "Mid Score! \n"; 
+  //std::cout << "Mid Score! \n"; 
    m_arm.move(CONSTANTS::ARM::SCORE_POS_HIGH);
    if (m_score_timer.Get() > 1.0_s) {
       m_roller.spin(-1);
    }
   if(m_score_timer.Get() >= 1.5_s) {
-      std::cout << "Time reached \n";
+      //std::cout << "Time reached \n";
       m_auto_sequence->pop_front();
       m_action = m_auto_sequence->front();
       m_roller.spin(0);
@@ -319,7 +316,7 @@ void Robot::TeleopPeriodic()
   switch(m_state)
     {
     case CONSTANTS::STATE::STOWED:
-      m_arm.move(CONSTANTS::ARM::STORE_POS);
+      //m_arm.move(CONSTANTS::ARM::STORE_POS);
       m_roller.spin(CONSTANTS::FF_SPEED);
     frc::SmartDashboard::PutString("state", "stowed");
 

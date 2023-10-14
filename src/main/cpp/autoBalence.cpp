@@ -12,11 +12,11 @@ autoBalance::autoBalance(){
      * CONFIG *
      **********/
     //Speed the robot drived while scoring/approaching station, default = 0.4
-    robot_speed_fast = 0.6;
+    robot_speed_fast = -0.6;
     
     //Speed the robot drives while balancing itself on the charge station.
     //Should be roughly half the fast speed, to make the robot more accurate, default = 0.2
-    robot_speed_slow = 0.1;
+    robot_speed_slow = -0.1;
 
     //Angle where the robot knows it is on the charge station, default = 13.0
     on_charge_station_degree = 11.0;

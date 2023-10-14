@@ -41,6 +41,7 @@ public:
   void SimulationInit() override;
   void SimulationPeriodic() override;
 
+
 private:
   frc::Timer m_score_timer;
   void swerveDrive(bool const &field_relative);
@@ -52,6 +53,7 @@ private:
   const std::string kScoreMidDoNothing = "Score mid, do nothing";
   const std::string kScoreMidCrossLine = "Score mid, cross line";
 
+  double speed;
 // Score balance 
 // Score Cross line balance
 std::list <CONSTANTS::AUTO_ACTIONS> score_balance {
@@ -62,7 +64,8 @@ std::list <CONSTANTS::AUTO_ACTIONS> score_balance {
 
   std::list<CONSTANTS::AUTO_ACTIONS> score_cross_line_bal {
     CONSTANTS::AUTO_ACTIONS::SCORE,
-    CONSTANTS::AUTO_ACTIONS::CENTER_CROSS_LINE, 
+    CONSTANTS::AUTO_ACTIONS::BALANCE_CROSS_LINE, 
+    CONSTANTS::AUTO_ACTIONS::BALANCE_CROSS_LINE_P, 
     CONSTANTS::AUTO_ACTIONS::BALANCE,
     CONSTANTS::AUTO_ACTIONS::NOTHING,
   };

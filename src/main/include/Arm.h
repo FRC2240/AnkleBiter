@@ -17,6 +17,9 @@ class Arm : public frc2::SubsystemBase {
 
     void move(double setpoint);
  
+ rev::SparkMaxPIDController m_arm_pid = m_left_arm_motor.GetPIDController();
+
+  rev::SparkMaxAbsoluteEncoder m_arm_encoder = m_left_arm_motor.GetAbsoluteEncoder(rev::SparkMaxAbsoluteEncoder::Type::kDutyCycle);
 
     /**
    * @return True if there is a cube in the intake, as measured by a time of flight sensor
@@ -44,9 +47,7 @@ class Arm : public frc2::SubsystemBase {
   rev::CANSparkMax m_right_arm_motor {CONSTANTS::ARM::RIGHT_MOTOR_ID, rev::CANSparkMaxLowLevel::MotorType::kBrushless};
 
 
-  rev::SparkMaxPIDController m_arm_pid = m_left_arm_motor.GetPIDController();
-
-  rev::SparkMaxAbsoluteEncoder m_arm_encoder = m_left_arm_motor.GetAbsoluteEncoder(rev::SparkMaxAbsoluteEncoder::Type::kDutyCycle);
+  
 
 
   CONSTANTS::PidCoeff m_arm_coeff = {2, 0, 0, 0, 0, -1.0, 1.0};

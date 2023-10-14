@@ -32,10 +32,9 @@ enum class AUTO_ACTIONS{
   CROSS_LINE_P, //Periodic
   BALANCE,
   CENTER_CROSS_LINE,
-  CENTER_CROSS_LINE_P,
   SCORE_MID,
-  CROSS_LINE_BACK,
-  CROSS_LINE_BACK_P
+  BALANCE_CROSS_LINE,
+  BALANCE_CROSS_LINE_P
 };
 constexpr double FF_SPEED = 0.05;
   constexpr int XBOX_PORT = 0;
@@ -98,7 +97,7 @@ namespace ARM
 
   namespace TRAJECTORY
   {
-    constexpr units::meter_t fall_back_dist {3.81};
+    constexpr units::meter_t fall_back_dist {3.9};
     constexpr units::meter_t fall_back_center {4.72};
     constexpr auto HP_VEL = 0.4_mps;
     constexpr units::meter_t SIMPLE_FORWARDS = -22_in; //CHANGEME
