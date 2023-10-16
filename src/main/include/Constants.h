@@ -63,7 +63,7 @@ namespace ARM
   constexpr int RIGHT_MOTOR_ID = 2;
   constexpr double INTAKE_VEL = 0.60;
   constexpr double STORE_POS = 0.952; 
-  constexpr double INTAKE_POS = 0.476; 
+  constexpr double INTAKE_POS = 0.51; 
   constexpr double SCORE_POS_LOW = STORE_POS;
   constexpr double SCORE_POS_MID = 0.880;
   constexpr double SCORE_POS_HIGH = 0.76;
@@ -96,7 +96,7 @@ namespace ARM
 
   namespace TRAJECTORY
   {
-    constexpr units::meter_t fall_back_dist {3.81};
+    constexpr units::meter_t fall_back_dist {4.0};
     constexpr units::meter_t fall_back_center {4.72};
     constexpr units::meter_t dock_dist {2.75};
     constexpr auto HP_VEL = 0.4_mps;
