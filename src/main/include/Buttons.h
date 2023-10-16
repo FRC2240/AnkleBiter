@@ -49,6 +49,6 @@ namespace BUTTON{
     }
 
     inline bool EXECUTE_EXTAKE(){
-        return stick.GetXButtonReleased();
+        return stick.GetRightBumper();
     }
 }

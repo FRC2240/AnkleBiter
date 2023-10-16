@@ -13,8 +13,9 @@ void Robot::RobotInit()
   m_chooser.AddOption(kScoreGoBack, kScoreGoBack);
   m_chooser.AddOption(kScoreBalance, kScoreBalance);
   m_chooser.AddOption(kScoreCrossLineBalance, kScoreCrossLineBalance);
-  m_chooser.AddOption(kScoreMidDoNothing, kScoreMidDoNothing);
-  m_chooser.AddOption(kScoreMidCrossLine, kScoreMidCrossLine);
+  m_chooser.AddOption(kScoreDock, kScoreDock);
+  //m_chooser.AddOption(kScoreMidDoNothing, kScoreMidDoNothing);
+  //m_chooser.AddOption(kScoreMidCrossLine, kScoreMidCrossLine);
   frc::SmartDashboard::PutData("Auto Modes", &m_chooser);
 #ifndef CFG_NO_DRIVEBASE
   m_drivetrain.init();
@@ -75,14 +76,9 @@ void Robot::AutonomousInit()
       m_auto_sequence = &score_cross_line_bal;
       std::cout << "Score cross line balance \n";
     }
-  else if (m_autoSelected == "Score mid, do nothing")
+  else if (m_autoSelected == "Score and dock")
     {
-      m_auto_sequence = &score_mid_do_nothing;
-      std::cout << "Score mid do nothing \n";
-    }
-  else if (m_autoSelected == "Score mid, cross line")
-    {
-      m_auto_sequence = &score_mid_cross_line;
+      m_auto_sequence = &score_dock;
       std::cout << "Score mid cross line \n";
     }
     
@@ -101,7 +97,7 @@ void Robot::AutonomousPeriodic()
   switch(m_action)
     {
     case CONSTANTS::AUTO_ACTIONS::NOTHING:
-      std::cout << "Do nothing! \n";
+      //std::cout << "Do nothing! \n";
       break;
 
     case CONSTANTS::AUTO_ACTIONS::BALANCE:
@@ -116,15 +112,23 @@ void Robot::AutonomousPeriodic()
       break;
 
     case CONSTANTS::AUTO_ACTIONS::CROSS_LINE:
-      std::cout << "Cross line! \n";
+      //std::cout << "Cross line! \n";
       m_fallback_traj = m_trajectory.generate_live_traj(
       m_trajectory.fall_back(CONSTANTS::TRAJECTORY::fall_back_dist));
       m_trajectory.init_live_traj(m_fallback_traj);
       m_auto_sequence->push_front(CONSTANTS::AUTO_ACTIONS::CROSS_LINE_P);
       break;
 
+    case CONSTANTS::AUTO_ACTIONS::DOCK_CROSS_LINE:
+      //std::cout << "DOCK! \n";
+      m_fallback_traj = m_trajectory.generate_live_traj(
+      m_trajectory.fall_back(CONSTANTS::TRAJECTORY::dock_dist));
+      m_trajectory.init_live_traj(m_fallback_traj);
+      m_auto_sequence->push_front(CONSTANTS::AUTO_ACTIONS::CROSS_LINE_P);
+      break;
+
     case CONSTANTS::AUTO_ACTIONS::CROSS_LINE_P:
-      std::cout << "Cross line P! \n";
+      //std::cout << "Cross line P! \n";
       if(m_trajectory.follow_live_traj(m_fallback_traj))
         {
           m_auto_sequence->pop_front();
@@ -135,14 +139,14 @@ void Robot::AutonomousPeriodic()
       break;
 
     case CONSTANTS::AUTO_ACTIONS::SCORE:
-      std::cout << "Score! \n";
+      //std::cout << "Score! \n";
       if(m_score_timer.Get() <= 0.5_s)
         {
           m_roller.spin(-0.35);
         }
       else
         {
-          std::cout << "Time reached \n";
+          //std::cout << "Time reached \n";
           m_auto_sequence->pop_front();
           m_action = m_auto_sequence->front();
           m_roller.spin(0);
@@ -151,33 +155,14 @@ void Robot::AutonomousPeriodic()
         }
       break;
 
-      case CONSTANTS::AUTO_ACTIONS::CROSS_LINE_BACK:
-        std::cout << "Cross line! \n";
-        m_fallback_traj = m_trajectory.generate_live_traj(
-        m_trajectory.fall_back(-CONSTANTS::TRAJECTORY::fall_back_dist));
-        m_trajectory.init_live_traj(m_fallback_traj);
-        m_auto_sequence->push_front(CONSTANTS::AUTO_ACTIONS::CROSS_LINE_BACK_P);
-      break;
-
-      case CONSTANTS::AUTO_ACTIONS::CROSS_LINE_BACK_P:
-        std::cout << "Cross line P! \n";
-        if(m_trajectory.follow_live_traj(m_fallback_traj))
-          {
-            m_auto_sequence->pop_front();
-            m_auto_sequence->push_front(CONSTANTS::AUTO_ACTIONS::NOTHING);
-
-          }
-
-      break;
-
 case CONSTANTS::AUTO_ACTIONS::SCORE_MID:
-  std::cout << "Mid Score! \n"; 
+  //std::cout << "Mid Score! \n"; 
    m_arm.move(CONSTANTS::ARM::SCORE_POS_HIGH);
    if (m_score_timer.Get() > 1.0_s) {
       m_roller.spin(-1);
    }
   if(m_score_timer.Get() >= 1.5_s) {
-      std::cout << "Time reached \n";
+      //std::cout << "Time reached \n";
       m_auto_sequence->pop_front();
       m_action = m_auto_sequence->front();
       m_roller.spin(0);
@@ -231,7 +216,7 @@ if (BUTTON::stick.GetStartButtonReleased())
 
 void Robot::TeleopPeriodic()
 {
-  
+  frc::SmartDashboard::PutNumber("navx", m_drivetrain.getAngle().value());
   Robot::swerveDrive(true);
 
   if(BUTTON::STOWED())
@@ -254,7 +239,7 @@ void Robot::TeleopPeriodic()
       m_extake_high_toggle = 0;
 
     }
-  if(BUTTON::EXTAKE_LOW())
+  if(BUTTON::EXTAKE_LOW() && m_state != CONSTANTS::STATE::EXTAKE_HIGH)
     {
       m_stowed_toggle = 0;
       m_intake_toggle = 0;
