@@ -17,6 +17,7 @@ class Arm : public frc2::SubsystemBase {
 
     void move(double setpoint);
  
+    bool is_good();
 
     /**
    * @return True if there is a cube in the intake, as measured by a time of flight sensor

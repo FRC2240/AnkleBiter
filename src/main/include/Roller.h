@@ -18,6 +18,7 @@ class Roller
         ~Roller();
         void spin(double speed);
         bool is_loaded();
+        bool is_good();
 
 
 

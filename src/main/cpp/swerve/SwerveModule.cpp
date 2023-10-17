@@ -163,4 +163,14 @@ void SwerveModule::manualVelocityContol(double const &velocity_ticks_per_100ms)
     driver.Set(TalonFXControlMode::Velocity, velocity_ticks_per_100ms);
     turner.Set(TalonFXControlMode::Position, 0);
 }
+
+bool SwerveModule::is_good()
+{
+
+    driver.GetFaults(faultlist);
+    return
+    (
+        faultlist.HasAnyFault()
+    );
+}
 #endif

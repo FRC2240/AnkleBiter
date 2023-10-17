@@ -43,6 +43,8 @@ public:
         return driver.GetSelectedSensorPosition();
     }
 
+    bool is_good();
+
     // No copies/moves should be occuring (Talons don't support this)
     SwerveModule(SwerveModule const &) = delete;
     SwerveModule(SwerveModule &&) = delete;
@@ -56,5 +58,6 @@ private:
     WPI_CANCoder cancoder;
     double const magnet_offset;
     int turner_addr;
+    Faults faultlist;
 };
 #endif

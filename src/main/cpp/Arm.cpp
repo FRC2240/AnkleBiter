@@ -17,6 +17,24 @@ Arm::Arm() {
 
 }
 
+bool Arm::is_good()
+{
+    return !(
+        m_left_arm_motor.GetFault(rev::CANSparkMax::FaultID::kSensorFault)  ||
+        m_right_arm_motor.GetFault(rev::CANSparkMax::FaultID::kSensorFault) ||
+        m_left_arm_motor.GetFault(rev::CANSparkMax::FaultID::kMotorFault)   ||
+        m_right_arm_motor.GetFault(rev::CANSparkMax::FaultID::kMotorFault)  ||
+        m_right_arm_motor.GetFault(rev::CANSparkMax::FaultID::kDRVFault)    ||
+        m_left_arm_motor.GetFault(rev::CANSparkMax::FaultID::kDRVFault)     ||
+        m_right_arm_motor.GetFault(rev::CANSparkMax::FaultID::kOtherFault)  ||
+        m_left_arm_motor.GetFault(rev::CANSparkMax::FaultID::kOtherFault)   ||
+        m_right_arm_motor.GetFault(rev::CANSparkMax::FaultID::kCANRX)       ||
+        m_left_arm_motor.GetFault(rev::CANSparkMax::FaultID::kCANRX)        ||
+        m_right_arm_motor.GetFault(rev::CANSparkMax::FaultID::kCANTX)       ||
+        m_left_arm_motor.GetFault(rev::CANSparkMax::FaultID::kCANTX)
+    );
+}
+
 void Arm::move(double setpoint)
 {
     // m_left_arm_motor.Set(0.1);

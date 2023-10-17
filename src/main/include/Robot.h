@@ -13,9 +13,10 @@
 #include "autoBalence.h"
 #include <frc/TimedRobot.h>
 #include <frc/smartdashboard/SendableChooser.h>
+#include <frc/DigitalOutput.h>
+#include "ForceLog.h"
 
 #ifndef CFG_NO_DRIVEBASE
-
 #include "swerve/Drivetrain.h"
 #include "swerve/Odometry.h"
 #include "swerve/SwerveModule.h"
@@ -42,6 +43,8 @@ public:
   void SimulationPeriodic() override;
 
 private:
+  int led_counter = 0;
+  ForceLog logger;
   frc::Timer m_score_timer;
   void swerveDrive(bool const &field_relative);
   frc::SendableChooser<std::string> m_chooser;
@@ -98,6 +101,12 @@ std::list<CONSTANTS::AUTO_ACTIONS> score_do_nothing {
   bool m_extake_low_toggle = false;
   bool m_extake_mid_toggle = false;
   bool m_extake_high_toggle = false;
+
+  // frc::DigitalOutput general_led {0};
+  frc::DigitalOutput drivetrain_led {1};
+  frc::DigitalOutput roller_led {2};
+  frc::DigitalOutput arm_led {3};
+  frc::DigitalOutput auto_led {4};
 
   pathplanner::PathPlannerTrajectory m_fallback_traj;
   Arm m_arm;

@@ -34,6 +34,8 @@ class Drivetrain
     void zero_yaw();
 
     double get_pitch();
+
+    bool is_good();
     
     void print_angle();
 

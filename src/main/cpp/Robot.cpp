@@ -20,6 +20,8 @@ void Robot::RobotInit()
 #ifndef CFG_NO_DRIVEBASE
   m_drivetrain.init();
   m_odometry.putField2d();
+
+  auto_led.Set(0);
 #endif
 }
 
@@ -216,7 +218,37 @@ if (BUTTON::stick.GetStartButtonReleased())
 
 void Robot::TeleopPeriodic()
 {
+
+  if (!m_arm.is_good())
+  {
+    logger.warn("Spark Max reported fault on arm, check REV hardware client");
+    led_counter++;
+    if (led_counter % 10 == 0)
+    {
+      arm_led.Set(!arm_led.Get());
+    }
+  }
+
+  if (!m_roller.is_good())
+  {
+    logger.warn("Spark Max reported fault on roller, check REV hardware client");
+    led_counter++;
+    if (led_counter % 10 == 0)
+    {
+      roller_led.Set(!roller_led.Get());
+    }
+  }
   
+  if (!m_drivetrain.is_good())
+  {
+    logger.warn("Fault occured on drivetrain. Good luck.");
+    led_counter++;
+    if (led_counter % 10 == 0)
+    {
+      drivetrain_led.Set(!drivetrain_led.Get());
+    }
+  }
+
   Robot::swerveDrive(true);
 
   if(BUTTON::STOWED())
@@ -383,7 +415,17 @@ void Robot::TeleopPeriodic()
 
 void Robot::DisabledInit() {}
 
-void Robot::DisabledPeriodic() {}
+void Robot::DisabledPeriodic() 
+{
+  if (m_chooser.GetSelected().length() <= 1 )
+  { 
+    led_counter++;
+    if (led_counter % 25 == 0)
+    {
+      auto_led.Set(!auto_led.Get());
+    }
+  }
+}
 
 void Robot::TestInit() {}
 

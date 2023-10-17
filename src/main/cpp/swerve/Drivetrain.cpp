@@ -87,6 +87,16 @@ void Drivetrain::init()
 {
 }
 
+bool Drivetrain::is_good()
+{
+  return
+  (
+    Module::back_left->is_good() ||
+    Module::back_right->is_good() ||
+    Module::front_left->is_good() ||
+    Module::front_right->is_good() 
+  );
+}
 // Returns values with 0 being front and positive angles going CW
 units::degree_t Drivetrain::getAngle()
 {
