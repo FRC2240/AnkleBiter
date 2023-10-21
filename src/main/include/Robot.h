@@ -42,6 +42,7 @@ public:
   void SimulationPeriodic() override;
 
 private:
+  bool is_driver_controled = true;
   frc::Timer m_score_timer;
   void swerveDrive(bool const &field_relative);
   frc::SendableChooser<std::string> m_chooser;

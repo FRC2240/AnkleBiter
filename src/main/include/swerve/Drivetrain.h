@@ -144,32 +144,33 @@ public:
                      double const &rot_p = ROTATE_P,
                      units::degrees_per_second_t const &max_rot_speed
                      = TELEOP_MAX_ANGULAR_SPEED);
-    
-    // This function is different from the camelCase version due to less arguments, better PID control and non-overidden defaults. This function is reccomended over the old one
-    // Use this one when you need a feedback device that isn't the gyro (i.e vision)
+
+    // This function is different from the camelCase version due to less
+    // arguments, better PID control and non-overidden defaults. This function is
+    // reccomended over the old one Use this one when you need a feedback device
+    // that isn't the gyro (i.e vision)
     bool face_direction(units::degree_t tgt, double feedback_device);
 
-    // Use this one when you want to use the gryo (i.e, snapping to a static point)
+    // Use this one when you want to use the gryo (i.e, snapping to a static
+    // point)
     bool face_direction(units::degree_t tgt);
 
-    
+    void faceClosest(units::meters_per_second_t const &dx,
+                     units::meters_per_second_t const &dy,
+                     bool const &field_relative, double const &rot_p = ROTATE_P,
+                     units::degrees_per_second_t const &max_rot_speed
+                     = TELEOP_MAX_ANGULAR_SPEED);
 
-        void faceClosest(units::meters_per_second_t const &dx,
-                         units::meters_per_second_t const &dy,
-                         bool const &field_relative, double const &rot_p = ROTATE_P,
-                         units::degrees_per_second_t const &max_rot_speed
-                         = TELEOP_MAX_ANGULAR_SPEED);
+    void tuneTurner(units::degree_t const &desired_angle);
 
-        void tuneTurner(units::degree_t const &desired_angle);
+    void manualPercentOutput(double const &percent_output);
 
-        void manualPercentOutput(double const &percent_output);
+    void manualVelocity(double const &velocity_ticks_per_100ms);
 
-        void manualVelocity(double const &velocity_ticks_per_100ms);
-
-    private:
-        CONSTANTS::PidCoeff pid_coef{ 1, 0.0, 0.0, 0.0, 0.0, -1, 1};
-        frc::PIDController turn_pid{ pid_coef.p, pid_coef.i, pid_coef.d };
-        AHRS navx{ frc::SPI::Port::kMXP };
+  private:
+    CONSTANTS::PidCoeff pid_coef{ 6, 0.0, 0.0, 0.0, 0.0, -1, 1 };
+    frc::PIDController turn_pid{ pid_coef.p, pid_coef.i, pid_coef.d };
+    AHRS navx{ frc::SPI::Port::kMXP };
 };
 
 #endif

@@ -4,8 +4,8 @@
 Vision::Vision(Drivetrain *drivetrain, Odometry *odometry)
     : m_drivetrain{ drivetrain }, m_odometry{ odometry }
 {
-  m_left_table->PutNumber("ledMode", 1); // Disable lights on boot
-  m_right_table->PutNumber("ledMode", 1);
+  // m_left_table->PutNumber("ledMode", 1); // Disable lights on boot
+  // m_right_table->PutNumber("ledMode", 1);
   nonsense.trans_x = 12346789.0;
   nonsense.trans_y = 987654321;
   nonsense.rot_x = 987654321;
@@ -22,6 +22,20 @@ Vision::Vision(Drivetrain *drivetrain, Odometry *odometry)
     }
 }
 
+std::optional<units::degree_t> Vision::get_coral()
+{
+  if(m_limelight->GetString("tclass", "ERROR") == "cube")
+    {
+      units::degree_t tx{ m_limelight->GetNumber("tx", 0.0) };
+      // Target is valid, return info
+      return std::optional<units::degree_t>{ tx };
+    }
+  else
+    {
+      return std::nullopt;
+    }
+}
+
 bool Vision::pose_loop()
 {
   /**
@@ -32,19 +46,21 @@ bool Vision::pose_loop()
    * 3. If valid, update pose
    **/
 
-  if((m_right_table->GetNumber("tv", 0.0) > 0.5)
-     || (m_left_table->GetNumber("tv", 0.0) > 0.5))
+  /*
+    if((m_right_table->GetNumber("tv", 0.0) > 0.5)
+    || (m_left_table->GetNumber("tv", 0.0) > 0.5))
     {
-      Vision::get_raw_data(m_index_pt);
+    Vision::get_raw_data(m_index_pt);
 
-      // Don't move forward if there is no data
-      m_index_pt++;
+    // Don't move forward if there is no data
+    m_index_pt++;
     }
 
-  if(m_index_pt >= CONSTANTS::VISION::BUFFER_SIZE)
+    if(m_index_pt >= CONSTANTS::VISION::BUFFER_SIZE)
     {
-      m_index_pt = 0;
+    m_index_pt = 0;
     }
+  */
 
   bool dev_check_l = Vision::check_std_dev(m_left_buffer);
   bool dev_check_r = Vision::check_std_dev(m_right_buffer);
@@ -119,32 +135,36 @@ std::vector<double> Vision::collect(double Data::*f,
 
 void Vision::get_raw_data(int i)
 {
+  return;
   /*
    *Gets the position of the robot on the field.
    *Used to reset odometry and for auto placement.
    *Use the position from a known apriltag to get position.
    **/
-  if(m_left_table->GetNumber("tv", 0.0) > 0.5)
+
+  /*
+    if(m_left_table->GetNumber("tv", 0.0) > 0.5)
     {
-      m_left_buffer[i]
-          = m_left_table->GetNumberArray("botpose", m_zero_vector);
-      m_left_buffer[i].is_good = true;
+    m_left_buffer[i]
+    = m_left_table->GetNumberArray("botpose", m_zero_vector);
+    m_left_buffer[i].is_good = true;
     }
-  else
+    else
     {
-      m_left_buffer[i].is_good = false;
+    m_left_buffer[i].is_good = false;
     }
 
-  if(m_right_table->GetNumber("tv", 0.0) > 0.5)
+    if(m_right_table->GetNumber("tv", 0.0) > 0.5)
     {
-      m_right_buffer[i]
-          = m_right_table->GetNumberArray("botpose", m_zero_vector);
-      m_right_buffer[i].is_good = true;
+    m_right_buffer[i]
+    = m_right_table->GetNumberArray("botpose", m_zero_vector);
+    m_right_buffer[i].is_good = true;
     }
-  else
+    else
     {
-      m_right_buffer[i].is_good = false;
+    m_right_buffer[i].is_good = false;
     }
+  */
 }
 
 double Vision::average(std::vector<double> v)
@@ -169,17 +189,17 @@ double Vision::average(std::vector<double> buffer_a,
     }
 
   for(unsigned short int i = 0; i < buffer_b.size(); i++)
-    {
-      v.push_back(buffer_b[i]);
-    }
+  {
+    v.push_back(buffer_b[i]);
+  }
 
   // https://stackoverflow.com/questions/201718/concatenating-two-stdvectors
   double mean = 0.0;
 
   for(auto value : v)
-    {
-      mean += value;
-    }
+  {
+    mean += value;
+  }
   return (mean / (double)v.size());
 }
 
@@ -204,9 +224,9 @@ bool Vision::check_std_dev(std::vector<Data> buffer)
 
          ((z >= CONSTANTS::VISION::MIN_STD_DEV_ROT)
           && (z <= CONSTANTS::VISION::MAX_STD_DEV_ROT)))
-        {
-          return true;
-        }
+      {
+        return true;
+      }
     }
   return false;
 }
@@ -217,9 +237,9 @@ int Vision::find_good_frames(std::vector<Data> data)
   for(int i = 0; i < CONSTANTS::VISION::BUFFER_SIZE; i++)
     {
       if(data[i].is_good)
-        {
-          frames++;
-        }
+      {
+        frames++;
+      }
     }
   return frames;
 }

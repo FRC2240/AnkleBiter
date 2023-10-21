@@ -29,6 +29,7 @@ extern frc::SwerveDriveKinematics<4> kinematics;
 
 Drivetrain::Drivetrain()
 {
+  frc::SmartDashboard::PutData("Turn PID", &turn_pid);
   // navx = std::make_unique<AHRS>(frc::SPI::Port::kMXP);
   using namespace Module;
   front_left = std::make_unique<SwerveModule>(60, 61, 14, 79.277);
@@ -318,24 +319,38 @@ bool Drivetrain::face_direction(units::degree_t tgt, double feedback_device)
   turn_pid.SetSetpoint(tgt.value());
   double pid_out = turn_pid.Calculate(feedback_device);
   drive(0_mps, 0_mps, units::degrees_per_second_t{ pid_out }, false);
-  if ((feedback_device >= turn_pid.GetSetpoint()-1) && (feedback_device <= turn_pid.GetSetpoint()+1)){
+  frc::SmartDashboard::PutNumber("PID out", pid_out);
+  frc::SmartDashboard::PutNumber("PID target", tgt.value());
+  frc::SmartDashboard::PutNumber("Current rotation", feedback_device);
+
+  if((feedback_device >= turn_pid.GetSetpoint() - 1)
+     && (feedback_device <= turn_pid.GetSetpoint() + 1))
+  {
     return true;
   }
-  else {
+  else
+  {
     return false;
   }
 }
 
 bool Drivetrain::face_direction(units::degree_t tgt)
 {
-  auto angle = getAngle().value();
+  auto angle = get_absolute_angle().value();
   turn_pid.SetSetpoint(tgt.value());
   double pid_out = turn_pid.Calculate(angle);
+  frc::SmartDashboard::PutNumber("PID out", pid_out);
+  frc::SmartDashboard::PutNumber("PID target", tgt.value());
+  frc::SmartDashboard::PutNumber("Current rotation", angle);
+
   drive(0_mps, 0_mps, units::degrees_per_second_t{ pid_out }, false);
-  if ((angle >= turn_pid.GetSetpoint()-1) && (angle <= turn_pid.GetSetpoint()+1)){
+  if((angle >= turn_pid.GetSetpoint() - 1)
+     && (angle <= turn_pid.GetSetpoint() + 1))
+  {
     return true;
   }
-  else {
+  else
+  {
     return false;
   }
 }

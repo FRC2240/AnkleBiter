@@ -14,8 +14,8 @@ void Robot::RobotInit()
   m_chooser.AddOption(kScoreBalance, kScoreBalance);
   m_chooser.AddOption(kScoreCrossLineBalance, kScoreCrossLineBalance);
   m_chooser.AddOption(kScoreDock, kScoreDock);
-  //m_chooser.AddOption(kScoreMidDoNothing, kScoreMidDoNothing);
-  //m_chooser.AddOption(kScoreMidCrossLine, kScoreMidCrossLine);
+  // m_chooser.AddOption(kScoreMidDoNothing, kScoreMidDoNothing);
+  // m_chooser.AddOption(kScoreMidCrossLine, kScoreMidCrossLine);
   frc::SmartDashboard::PutData("Auto Modes", &m_chooser);
 #ifndef CFG_NO_DRIVEBASE
   m_drivetrain.init();
@@ -48,14 +48,14 @@ void Robot::AutonomousInit()
 {
 #ifndef CFG_NO_DRIVEBASE
   m_odometry.update();
-  //m_drivetrain.flip();
+  // m_drivetrain.flip();
 #endif
 
   m_autoSelected = m_chooser.GetSelected();
   // m_autoSelected = SmartDashboard::GetString("Auto Selector",
   //     kAutoNameDefault);
   fmt::print("Auto selected: {}\n", m_autoSelected);
-    m_score_timer.Start();
+  m_score_timer.Start();
   if(m_autoSelected == "Score Go Back")
     {
       m_auto_sequence = &score_go_back;
@@ -76,15 +76,15 @@ void Robot::AutonomousInit()
       m_auto_sequence = &score_cross_line_bal;
       std::cout << "Score cross line balance \n";
     }
-  else if (m_autoSelected == "Score and dock")
+  else if(m_autoSelected == "Score and dock")
     {
       m_auto_sequence = &score_dock;
       std::cout << "Score mid cross line \n";
     }
-    
-    // m_fallback_traj = m_trajectory.generate_live_traj(
-    //   m_trajectory.fall_back(CONSTANTS::TRAJECTORY::fall_back_center));
-    //   m_trajectory.init_live_traj(m_fallback_traj);
+
+  // m_fallback_traj = m_trajectory.generate_live_traj(
+  //   m_trajectory.fall_back(CONSTANTS::TRAJECTORY::fall_back_center));
+  //   m_trajectory.init_live_traj(m_fallback_traj);
 }
 
 void Robot::AutonomousPeriodic()
@@ -92,12 +92,11 @@ void Robot::AutonomousPeriodic()
   m_odometry.update();
   m_odometry.putField2d();
 
-
   m_action = m_auto_sequence->front();
   switch(m_action)
     {
     case CONSTANTS::AUTO_ACTIONS::NOTHING:
-      //std::cout << "Do nothing! \n";
+      // std::cout << "Do nothing! \n";
       break;
 
     case CONSTANTS::AUTO_ACTIONS::BALANCE:
@@ -112,41 +111,40 @@ void Robot::AutonomousPeriodic()
       break;
 
     case CONSTANTS::AUTO_ACTIONS::CROSS_LINE:
-      //std::cout << "Cross line! \n";
+      // std::cout << "Cross line! \n";
       m_fallback_traj = m_trajectory.generate_live_traj(
-      m_trajectory.fall_back(CONSTANTS::TRAJECTORY::fall_back_dist));
+          m_trajectory.fall_back(CONSTANTS::TRAJECTORY::fall_back_dist));
       m_trajectory.init_live_traj(m_fallback_traj);
       m_auto_sequence->push_front(CONSTANTS::AUTO_ACTIONS::CROSS_LINE_P);
       break;
 
     case CONSTANTS::AUTO_ACTIONS::DOCK_CROSS_LINE:
-      //std::cout << "DOCK! \n";
+      // std::cout << "DOCK! \n";
       m_fallback_traj = m_trajectory.generate_live_traj(
-      m_trajectory.fall_back(CONSTANTS::TRAJECTORY::dock_dist));
+          m_trajectory.fall_back(CONSTANTS::TRAJECTORY::dock_dist));
       m_trajectory.init_live_traj(m_fallback_traj);
       m_auto_sequence->push_front(CONSTANTS::AUTO_ACTIONS::CROSS_LINE_P);
       break;
 
     case CONSTANTS::AUTO_ACTIONS::CROSS_LINE_P:
-      //std::cout << "Cross line P! \n";
+      // std::cout << "Cross line P! \n";
       if(m_trajectory.follow_live_traj(m_fallback_traj))
         {
           m_auto_sequence->pop_front();
           m_auto_sequence->push_front(CONSTANTS::AUTO_ACTIONS::NOTHING);
-
         }
 
       break;
 
     case CONSTANTS::AUTO_ACTIONS::SCORE:
-      //std::cout << "Score! \n";
+      // std::cout << "Score! \n";
       if(m_score_timer.Get() <= 0.5_s)
         {
           m_roller.spin(-0.35);
         }
       else
         {
-          //std::cout << "Time reached \n";
+          // std::cout << "Time reached \n";
           m_auto_sequence->pop_front();
           m_action = m_auto_sequence->front();
           m_roller.spin(0);
@@ -155,57 +153,62 @@ void Robot::AutonomousPeriodic()
         }
       break;
 
-case CONSTANTS::AUTO_ACTIONS::SCORE_MID:
-  //std::cout << "Mid Score! \n"; 
-   m_arm.move(CONSTANTS::ARM::SCORE_POS_HIGH);
-   if (m_score_timer.Get() > 1.0_s) {
-      m_roller.spin(-1);
-   }
-  if(m_score_timer.Get() >= 1.5_s) {
-      //std::cout << "Time reached \n";
-      m_auto_sequence->pop_front();
-      m_action = m_auto_sequence->front();
-      m_roller.spin(0);
-      // m_score_timer.Stop();
-      // m_score_timer.Reset();
-    }
+    case CONSTANTS::AUTO_ACTIONS::SCORE_MID:
+      // std::cout << "Mid Score! \n";
+      m_arm.move(CONSTANTS::ARM::SCORE_POS_HIGH);
+      if(m_score_timer.Get() > 1.0_s)
+        {
+          m_roller.spin(-1);
+        }
+      if(m_score_timer.Get() >= 1.5_s)
+        {
+          // std::cout << "Time reached \n";
+          m_auto_sequence->pop_front();
+          m_action = m_auto_sequence->front();
+          m_roller.spin(0);
+          // m_score_timer.Stop();
+          // m_score_timer.Reset();
+        }
       break;
 
     default:
       break;
     }
-
 }
 
 void Robot::TeleopInit()
 {
-    frc::SmartDashboard::PutBoolean("dbg/snap_zero", false);
-frc::SmartDashboard::PutBoolean("dbg/bool_snap_angle", false);
-frc::SmartDashboard::PutNumber("dbg/val_snap_angle", 0.0);
+  frc::SmartDashboard::PutBoolean("dbg/snap_zero", false);
+  frc::SmartDashboard::PutBoolean("dbg/bool_snap_angle", false);
+  frc::SmartDashboard::PutNumber("dbg/val_snap_angle", 0.0);
 #ifndef CFG_NO_DRIVEBASE
   m_odometry.update();
 #endif
+is_driver_controled = true;
 }
 
 void Robot::swerveDrive(bool const &field_relative)
 {
 #ifndef CFG_NO_DRIVEBASE
- frc::SmartDashboard::PutNumber("Pitch", m_drivetrain.get_pitch());
- frc::SmartDashboard::PutNumber("X", m_drivetrain.acc.GetX());
- frc::SmartDashboard::PutNumber("Y", m_drivetrain.acc.GetY());
+  frc::SmartDashboard::PutNumber("Pitch", m_drivetrain.get_pitch());
+  frc::SmartDashboard::PutNumber("X", m_drivetrain.acc.GetX());
+  frc::SmartDashboard::PutNumber("Y", m_drivetrain.acc.GetY());
   frc::SmartDashboard::PutNumber("Z", m_drivetrain.acc.GetZ());
   frc::SmartDashboard::PutNumber("gryo", m_drivetrain.getAngle().value());
 
+  if(BUTTON::stick.GetStartButtonReleased())
+    {
+      m_drivetrain.zero_yaw();
+    }
+  const units::meters_per_second_t left_right{
+    -(frc::ApplyDeadband(BUTTON::DRIVETRAIN::LX(), CONSTANTS::DEADBAND))
+    * CONSTANTS::DRIVE::TELEOP_MAX_SPEED
+  };
 
-if (BUTTON::stick.GetStartButtonReleased())
-{
-  m_drivetrain.zero_yaw();
-}
-  const units::meters_per_second_t left_right{ -(frc::ApplyDeadband(
-      BUTTON::DRIVETRAIN::LX(), CONSTANTS::DEADBAND)) * CONSTANTS::DRIVE::TELEOP_MAX_SPEED };
-
-  const units::meters_per_second_t front_back{ -(frc::ApplyDeadband(
-      BUTTON::DRIVETRAIN::LY(), CONSTANTS::DEADBAND)) * CONSTANTS::DRIVE::TELEOP_MAX_SPEED };
+  const units::meters_per_second_t front_back{
+    -(frc::ApplyDeadband(BUTTON::DRIVETRAIN::LY(), CONSTANTS::DEADBAND))
+    * CONSTANTS::DRIVE::TELEOP_MAX_SPEED
+  };
   auto const rot
       = frc::ApplyDeadband(BUTTON::DRIVETRAIN::RX(), CONSTANTS::DEADBAND)
         * (CONSTANTS::DRIVE::TELEOP_MAX_ANGULAR_SPEED);
@@ -220,28 +223,42 @@ if (BUTTON::stick.GetStartButtonReleased())
 
 void Robot::TeleopPeriodic()
 {
-<<<<<<< HEAD
   frc::SmartDashboard::PutNumber("navx", m_drivetrain.getAngle().value());
-||||||| parent of 57f841c (started on better pid)
-  
-=======
+is_driver_controled = !frc::SmartDashboard::GetBoolean("dbg/snap_zero", false);
+  if(frc::SmartDashboard::GetBoolean("dbg/snap_zero", false) == true)
+    {
+      is_driver_controled = false;
+      if (m_drivetrain.face_direction(0_deg))
+      {
+        is_driver_controled = true;
+      }
+    }
 
-  if (frc::SmartDashboard::GetBoolean("dbg/snap_zero", false) == true)
-  {
-    // m_drivetrain.snap_to_zero();
-    m_drivetrain.face_direction(0_deg);
-  }
-  
-  if (frc::SmartDashboard::GetBoolean("dbg/bool_snap_angle",false) == true)
-  {
-    units::degree_t angle {frc::SmartDashboard::GetNumber("dbg/val_snap_angle", 0.0)};
-    m_drivetrain.faceDirection(0_mps, 0_mps, angle, false, 0.0);
-  }
-  
-  
->>>>>>> 57f841c (started on better pid)
+  if(frc::SmartDashboard::GetBoolean("dbg/bool_snap_angle", false) == true)
+    {
+      units::degree_t angle{ frc::SmartDashboard::GetNumber(
+          "dbg/val_snap_angle", 0.0) };
+      m_drivetrain.faceDirection(0_mps, 0_mps, angle, false, 0.0);
+    }
+
+  if(frc::SmartDashboard::GetBoolean("dbg/bool_snap_doral", false) == true)
+    {
+      if(m_vision.get_coral())
+        // Because Vision::get_coral() is of type
+        // std::optional<units::degree_t>, running an
+        // if/else checks if the value is valid
+        {
+          m_drivetrain.faceDirection(0_mps, 0_mps,
+                                     m_vision.get_coral().value(), false, 0.0);
+          // A .value() on an std::option<units::degree_t> returns a
+          // units::degree_t, not a double
+        }
+    }
+
+if (is_driver_controled)
+{
   Robot::swerveDrive(true);
-
+}
   if(BUTTON::STOWED())
     {
       m_stowed_toggle = !m_stowed_toggle;
@@ -250,7 +267,6 @@ void Robot::TeleopPeriodic()
       m_extake_low_toggle = 0;
       m_extake_mid_toggle = 0;
       m_extake_high_toggle = 0;
-
     }
   if(BUTTON::INTAKE())
     {
@@ -260,7 +276,6 @@ void Robot::TeleopPeriodic()
       m_extake_low_toggle = 0;
       m_extake_mid_toggle = 0;
       m_extake_high_toggle = 0;
-
     }
   if(BUTTON::EXTAKE_LOW() && m_state != CONSTANTS::STATE::EXTAKE_HIGH)
     {
@@ -314,29 +329,33 @@ void Robot::TeleopPeriodic()
     {
       m_state = CONSTANTS::STATE::STOWED;
     }
-  if(m_extake_mid_toggle){
-    m_state = CONSTANTS::STATE::EXTAKE_MID;
-  }
-  if(m_extake_high_toggle){
-    m_state = CONSTANTS::STATE::EXTAKE_HIGH;
-  }
-  if(m_intake_overide_toggle){
-    m_state = CONSTANTS::STATE::INTAKE_OVERIDE;
-  }
+  if(m_extake_mid_toggle)
+    {
+      m_state = CONSTANTS::STATE::EXTAKE_MID;
+    }
+  if(m_extake_high_toggle)
+    {
+      m_state = CONSTANTS::STATE::EXTAKE_HIGH;
+    }
+  if(m_intake_overide_toggle)
+    {
+      m_state = CONSTANTS::STATE::INTAKE_OVERIDE;
+    }
   switch(m_state)
     {
     case CONSTANTS::STATE::STOWED:
       m_arm.move(CONSTANTS::ARM::STORE_POS);
       m_roller.spin(CONSTANTS::FF_SPEED);
-    frc::SmartDashboard::PutString("state", "stowed");
+      frc::SmartDashboard::PutString("state", "stowed");
 
       break;
 
     case CONSTANTS::STATE::INTAKE:
-    frc::SmartDashboard::PutString("state", "intake");
+      frc::SmartDashboard::PutString("state", "intake");
       m_arm.move(CONSTANTS::ARM::INTAKE_POS);
-      m_roller.spin(CONSTANTS::ARM::INTAKE_VEL); // No idea if this is the right value/sign or not
-  frc::SmartDashboard::PutBoolean("loaded", m_roller.is_loaded());
+      m_roller.spin(CONSTANTS::ARM::INTAKE_VEL); // No idea if this is the
+                                                 // right value/sign or not
+      frc::SmartDashboard::PutBoolean("loaded", m_roller.is_loaded());
       if(m_roller.is_loaded())
         {
           m_intake_toggle = 0;
@@ -348,15 +367,15 @@ void Robot::TeleopPeriodic()
     case CONSTANTS::STATE::INTAKE_OVERIDE:
       frc::SmartDashboard::PutString("state", "intake");
       m_arm.move(CONSTANTS::ARM::INTAKE_POS);
-      m_roller.spin(CONSTANTS::ARM::INTAKE_VEL); 
+      m_roller.spin(CONSTANTS::ARM::INTAKE_VEL);
       break;
 
     case CONSTANTS::STATE::EXTAKE_LOW:
       m_arm.move(CONSTANTS::ARM::SCORE_POS_LOW);
       m_roller.spin(-0.35);
       m_score_timer.Start();
-      
-        if(m_score_timer.Get() > units::time::second_t(0.5)) 
+
+      if(m_score_timer.Get() > units::time::second_t(0.5))
         {
           m_score_timer.Stop();
           m_score_timer.Reset();
@@ -365,15 +384,15 @@ void Robot::TeleopPeriodic()
         }
       break;
 
-      case CONSTANTS::STATE::EXTAKE_MID:
+    case CONSTANTS::STATE::EXTAKE_MID:
       m_arm.move(CONSTANTS::ARM::SCORE_POS_MID);
       m_score_timer.Start();
 
-        if(m_score_timer.Get() > units::time::second_t(1.0)) 
+      if(m_score_timer.Get() > units::time::second_t(1.0))
         {
           m_roller.spin(-1);
         }
-        if(m_score_timer.Get() > units::time::second_t(1.5))
+      if(m_score_timer.Get() > units::time::second_t(1.5))
         {
           m_score_timer.Stop();
           m_score_timer.Reset();
@@ -382,15 +401,15 @@ void Robot::TeleopPeriodic()
         }
       break;
 
-      case CONSTANTS::STATE::EXTAKE_HIGH:
+    case CONSTANTS::STATE::EXTAKE_HIGH:
       m_arm.move(CONSTANTS::ARM::SCORE_POS_HIGH);
 
-        if(BUTTON::EXECUTE_EXTAKE()) 
+      if(BUTTON::EXECUTE_EXTAKE())
         {
           m_score_timer.Start();
           m_roller.spin(-1);
         }
-        if(m_score_timer.Get() > units::time::second_t(0.5)) 
+      if(m_score_timer.Get() > units::time::second_t(0.5))
         {
           m_score_timer.Stop();
           m_score_timer.Reset();
@@ -398,10 +417,7 @@ void Robot::TeleopPeriodic()
           m_extake_high_toggle = !m_extake_high_toggle;
         }
       break;
-
     }
-    
-
 }
 
 void Robot::DisabledInit() {}
@@ -410,7 +426,41 @@ void Robot::DisabledPeriodic() {}
 
 void Robot::TestInit() {}
 
-void Robot::TestPeriodic() {}
+void Robot::TestPeriodic() 
+{
+  frc::SmartDashboard::PutNumber("navx", m_drivetrain.getAngle().value());
+
+  if(frc::SmartDashboard::GetBoolean("dbg/snap_zero", false) == true)
+    {
+      is_driver_controled = false;
+      if (m_drivetrain.face_direction(0_deg))
+      {
+        is_driver_controled = true;
+      }
+    }
+
+  if(frc::SmartDashboard::GetBoolean("dbg/bool_snap_angle", false) == true)
+    {
+      units::degree_t angle{ frc::SmartDashboard::GetNumber(
+          "dbg/val_snap_angle", 0.0) };
+      m_drivetrain.faceDirection(0_mps, 0_mps, angle, false, 0.0);
+    }
+
+  if(frc::SmartDashboard::GetBoolean("dbg/bool_snap_doral", false) == true)
+    {
+      if(m_vision.get_coral())
+        // Because Vision::get_coral() is of type
+        // std::optional<units::degree_t>, running an
+        // if/else checks if the value is valid
+        {
+          m_drivetrain.faceDirection(0_mps, 0_mps,
+                                     m_vision.get_coral().value(), false, 0.0);
+          // A .value() on an std::option<units::degree_t> returns a
+          // units::degree_t, not a double
+        }
+    }
+
+}
 
 void Robot::SimulationInit() {}
 
