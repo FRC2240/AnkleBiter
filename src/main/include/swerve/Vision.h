@@ -90,7 +90,7 @@ private:
   std::vector<double> m_zero_vector = { 42.0, 42.0, 42.0, 92, 10, 22 };
 
   std::shared_ptr<nt::NetworkTable> m_limelight
-      = nt::NetworkTableInstance::GetDefault().GetTable("limelight");
+      = nt::NetworkTableInstance::GetDefault().GetTable("limelight-dev");
 
   /*  std::shared_ptr<nt::NetworkTable> m_left_table
       = nt::NetworkTableInstance::GetDefault().GetTable("limelight-left");

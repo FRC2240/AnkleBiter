@@ -178,6 +178,8 @@ void Robot::AutonomousPeriodic()
 
 void Robot::TeleopInit()
 {
+    frc::SmartDashboard::PutBoolean("dbg/bool_snap_coral", false);
+
   frc::SmartDashboard::PutBoolean("dbg/snap_zero", false);
   frc::SmartDashboard::PutBoolean("dbg/bool_snap_angle", false);
   frc::SmartDashboard::PutNumber("dbg/val_snap_angle", 0.0);
@@ -241,15 +243,19 @@ is_driver_controled = !frc::SmartDashboard::GetBoolean("dbg/snap_zero", false);
       m_drivetrain.faceDirection(0_mps, 0_mps, angle, false, 0.0);
     }
 
-  if(frc::SmartDashboard::GetBoolean("dbg/bool_snap_doral", false) == true)
+  else if(frc::SmartDashboard::GetBoolean("dbg/bool_snap_coral", false) == true)
     {
-      if(m_vision.get_coral())
+            is_driver_controled = false;
+      auto coral = m_vision.get_coral();
+
+      if(coral)
         // Because Vision::get_coral() is of type
         // std::optional<units::degree_t>, running an
         // if/else checks if the value is valid
         {
-          m_drivetrain.faceDirection(0_mps, 0_mps,
-                                     m_vision.get_coral().value(), false, 0.0);
+          if (coral.value().value() < 1 && coral.value().value() > -1){
+          m_drivetrain.face_direction(0_deg, coral.value().value());
+          }
           // A .value() on an std::option<units::degree_t> returns a
           // units::degree_t, not a double
         }
