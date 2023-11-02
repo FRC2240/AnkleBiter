@@ -245,19 +245,25 @@ is_driver_controled = !frc::SmartDashboard::GetBoolean("dbg/snap_zero", false);
 
   else if(frc::SmartDashboard::GetBoolean("dbg/bool_snap_coral", false) == true)
     {
-            is_driver_controled = false;
+      is_driver_controled = false;
       auto coral = m_vision.get_coral();
 
-      if(coral)
+      if(coral) {
+      frc::SmartDashboard::PutBoolean("seesgp", true);
         // Because Vision::get_coral() is of type
         // std::optional<units::degree_t>, running an
         // if/else checks if the value is valid
-        {
-          if (coral.value().value() < 1 && coral.value().value() > -1){
+        
+          // if (coral.value().value() < 1 && coral.value().value() > -1){
           m_drivetrain.face_direction(0_deg, coral.value().value());
-          }
+          frc::SmartDashboard::PutNumber("angle of gp", coral.value().value());
+          // }
           // A .value() on an std::option<units::degree_t> returns a
           // units::degree_t, not a double
+        }
+        else
+        {
+          
         }
     }
 
