@@ -51,6 +51,7 @@ private:
   const std::string kScoreBalance = "Score Balance";
   const std::string kScoreCrossLineBalance = "Score cross line balance";
   const std::string kScoreDock = "Score and dock";
+  const std::string kScoreCoral = "Coral Score";
   //const std::string kScoreMidDoNothing = "Score mid, do nothing";
   //const std::string kScoreMidCrossLine = "Score mid, cross line";
 
@@ -87,7 +88,11 @@ std::list<CONSTANTS::AUTO_ACTIONS> score_do_nothing {
     CONSTANTS::AUTO_ACTIONS::CROSS_LINE_P,
     CONSTANTS::AUTO_ACTIONS::NOTHING,
   };
-  
+  std::list<CONSTANTS::AUTO_ACTIONS> score_coral {
+    CONSTANTS::AUTO_ACTIONS::SCORE,
+    CONSTANTS::AUTO_ACTIONS::CORAL_SCORE,
+    CONSTANTS::AUTO_ACTIONS::NOTHING,
+  };
   std::list<CONSTANTS::AUTO_ACTIONS> *m_auto_sequence;
 
   std::string m_autoSelected;
@@ -95,7 +100,7 @@ std::list<CONSTANTS::AUTO_ACTIONS> score_do_nothing {
   CONSTANTS::STATE m_state = CONSTANTS::STATE::STOWED;
   bool m_stowed_toggle = true;
   bool m_intake_toggle = false;
-  bool m_intake_overide_toggle = false;
+  bool m_intake_overide_toggle = false; 
   bool m_extake_low_toggle = false;
   bool m_extake_mid_toggle = false;
   bool m_extake_high_toggle = false;

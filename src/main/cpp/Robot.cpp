@@ -14,6 +14,7 @@ void Robot::RobotInit()
   m_chooser.AddOption(kScoreBalance, kScoreBalance);
   m_chooser.AddOption(kScoreCrossLineBalance, kScoreCrossLineBalance);
   m_chooser.AddOption(kScoreDock, kScoreDock);
+  m_chooser.AddOption(kScoreCoral, kScoreCoral);
   // m_chooser.AddOption(kScoreMidDoNothing, kScoreMidDoNothing);
   // m_chooser.AddOption(kScoreMidCrossLine, kScoreMidCrossLine);
   frc::SmartDashboard::PutData("Auto Modes", &m_chooser);
@@ -81,7 +82,16 @@ void Robot::AutonomousInit()
       m_auto_sequence = &score_dock;
       std::cout << "Score mid cross line \n";
     }
+    else if (m_autoSelected == "Coral Score")
+    {
+      m_auto_sequence = &score_coral;
+      std::cout << "Coral Score \n";
+    }
+    /*else if (m_autoSelected == &)
+    {
 
+    }
+*/
   // m_fallback_traj = m_trajectory.generate_live_traj(
   //   m_trajectory.fall_back(CONSTANTS::TRAJECTORY::fall_back_center));
   //   m_trajectory.init_live_traj(m_fallback_traj);
@@ -170,9 +180,37 @@ void Robot::AutonomousPeriodic()
           // m_score_timer.Reset();
         }
       break;
+    case CONSTANTS::AUTO_ACTIONS::CORAL_SCORE:
+frc::SmartDashboard::PutNumber("navx", m_drivetrain.getAngle().value());
+is_driver_controled = !frc::SmartDashboard::GetBoolean("dbg/snap_zero", false);
+      is_driver_controled = false;
+      auto coral = m_vision.get_coral();
+      if(coral) {
+        frc::SmartDashboard::PutNumber("coral value", coral.value().value());
+      frc::SmartDashboard::PutBoolean("seesgp", true);
+        // Because Vision::get_coral() is of type
+        // std::optional<units::degree_t>, running an
+        // if/else checks if the value is valid
+        
+          // if (coral.value().value() < 1 && coral.value().value() > -1){
+            std::cout << coral.value().value() << std::endl;
+          m_drivetrain.face_direction(0_deg, coral.value().value());
+          frc::SmartDashboard::PutNumber("angle of gp", coral.value().value());
+          // }
+          // A .value() on an std::option<units::degree_t> returns a
+          // units::degree_t, not a double
+            if (coral.value().value() < 1 && coral.value().value() > -1){
+                        std::cout << "The Robot is ready to move forward \n" ; 
+            }
+        }
+        else
+        {
+          m_drivetrain.stop();
+        }
+        break;
 
-    default:
-      break;
+      //default:
+      
     }
 }
 
@@ -225,8 +263,9 @@ void Robot::swerveDrive(bool const &field_relative)
 
 void Robot::TeleopPeriodic()
 {
-  frc::SmartDashboard::PutNumber("navx", m_drivetrain.getAngle().value());
+  /*frc::SmartDashboard::PutNumber("navx", m_drivetrain.getAngle().value());
 is_driver_controled = !frc::SmartDashboard::GetBoolean("dbg/snap_zero", false);
+/*  
   if(frc::SmartDashboard::GetBoolean("dbg/snap_zero", false) == true)
     {
       is_driver_controled = false;
@@ -244,17 +283,19 @@ is_driver_controled = !frc::SmartDashboard::GetBoolean("dbg/snap_zero", false);
     }
 
   else if(frc::SmartDashboard::GetBoolean("dbg/bool_snap_coral", false) == true)
-    {
+    { 
       is_driver_controled = false;
       auto coral = m_vision.get_coral();
-
+ 
       if(coral) {
+        frc::SmartDashboard::PutNumber("coral value", coral.value().value());
       frc::SmartDashboard::PutBoolean("seesgp", true);
         // Because Vision::get_coral() is of type
         // std::optional<units::degree_t>, running an
         // if/else checks if the value is valid
         
           // if (coral.value().value() < 1 && coral.value().value() > -1){
+            std::cout << coral.value().value() << std::endl;
           m_drivetrain.face_direction(0_deg, coral.value().value());
           frc::SmartDashboard::PutNumber("angle of gp", coral.value().value());
           // }
@@ -263,17 +304,16 @@ is_driver_controled = !frc::SmartDashboard::GetBoolean("dbg/snap_zero", false);
         }
         else
         {
-          
+          m_drivetrain.stop();
         }
-    }
-
+    //}*/
 if (is_driver_controled)
 {
   Robot::swerveDrive(true);
 }
   if(BUTTON::STOWED())
     {
-      m_stowed_toggle = !m_stowed_toggle;
+      m_stowed_toggle = !m_stowed_toggle;\
       m_intake_toggle = 0;
       m_intake_overide_toggle = 0;
       m_extake_low_toggle = 0;

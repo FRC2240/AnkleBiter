@@ -37,6 +37,11 @@
           "visible": true
         }
       },
+      "/SmartDashboard/Auto Modes": {
+        "window": {
+          "visible": true
+        }
+      },
       "/SmartDashboard/Odometry Field": {
         "Robot": {
           "style": "Box/Image"
@@ -96,6 +101,25 @@
               "digital": "Auto",
               "id": "NT:/limelight-dev/tv",
               "marker": "Diamond"
+            }
+          ]
+        }
+      ]
+    },
+    "Plot <1>": {
+      "plots": [
+        {
+          "height": 129,
+          "series": [
+            {
+              "color": [
+                0.2980392277240753,
+                0.44705885648727417,
+                0.6901960968971252,
+                1.0
+              ],
+              "id": "NT:/SmartDashboard/coral value",
+              "marker": "Circle"
             }
           ]
         }

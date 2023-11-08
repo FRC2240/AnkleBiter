@@ -22,6 +22,8 @@ namespace BUTTON{
         return stick.GetRightY();
     }
    }
+   inline double DPADL(){
+    return  stick.GetPOV() == 270;}
    
 
     inline bool STOWED(){

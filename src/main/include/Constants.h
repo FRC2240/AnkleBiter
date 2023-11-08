@@ -33,7 +33,8 @@ enum class AUTO_ACTIONS{
   BALANCE,
   CENTER_CROSS_LINE,
   SCORE_MID,
-  DOCK_CROSS_LINE
+  DOCK_CROSS_LINE,
+  CORAL_SCORE
 };
 constexpr double FF_SPEED = 0.05;
   constexpr int XBOX_PORT = 0;

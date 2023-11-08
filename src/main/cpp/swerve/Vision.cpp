@@ -28,6 +28,7 @@ std::optional<units::degree_t> Vision::get_coral()
     {
       units::degree_t tx{ m_limelight->GetNumber("tx", 0.0) };
       // Target is valid, return info
+      
       return std::optional<units::degree_t>{ tx };
     }
   else
