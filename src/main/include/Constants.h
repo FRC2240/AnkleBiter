@@ -15,6 +15,12 @@
 
 namespace CONSTANTS 
 {
+    enum class TARGET
+    {
+        HIGH,
+        MID,
+        LOW,
+    };
   enum class STATE
   {
   STOWED,
@@ -57,6 +63,9 @@ constexpr double FF_SPEED = 0.05;
 
 namespace ARM
 {
+constexpr double EXTAKE_VEL_LOW = -0.5;
+constexpr double EXTAKE_VEL_MID = -1;
+
   /// How large the increace should be for manual control.
   constexpr double STEP = 10;
   constexpr int LEFT_MOTOR_ID = 1;
