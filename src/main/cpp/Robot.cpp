@@ -204,8 +204,8 @@ void Robot::AutonomousPeriodic()
       break;
 
     case CONSTANTS::AUTO_ACTIONS::CORAL_SCORE:
-frc::SmartDashboard::PutNumber("navx", m_drivetrain.getAngle().value());
-is_driver_controled = !frc::SmartDashboard::GetBoolean("dbg/snap_zero", false);
+      frc::SmartDashboard::PutNumber("navx", m_drivetrain.getAngle().value());
+      is_driver_controled = !frc::SmartDashboard::GetBoolean("dbg/snap_zero", false);
       is_driver_controled = false;
       auto coral = m_vision.get_coral();
       if(coral) {
@@ -232,6 +232,34 @@ is_driver_controled = !frc::SmartDashboard::GetBoolean("dbg/snap_zero", false);
           m_drivetrain.stop();
         }
         break;
+
+    case CONSTANTS::AUTO_ACTIONS::PATH_1:
+      m_fallback_traj = m_trajectory.generate_live_traj(
+          m_trajectory.fall_back(CONSTANTS::TRAJECTORY::fall_back_center));
+      m_trajectory.init_live_traj(m_fallback_traj);
+      m_action = CONSTANTS::AUTO_ACTIONS::CROSS_LINE_P;
+      break;
+    
+    case CONSTANTS::AUTO_ACTIONS::PATH_2:
+      m_fallback_traj = m_trajectory.generate_live_traj(
+          m_trajectory.fall_back(CONSTANTS::TRAJECTORY::fall_back_center));
+      m_trajectory.init_live_traj(m_fallback_traj);
+      m_action = CONSTANTS::AUTO_ACTIONS::CROSS_LINE_P;
+      break;
+
+    case CONSTANTS::AUTO_ACTIONS::PATH_3:
+      m_fallback_traj = m_trajectory.generate_live_traj(
+          m_trajectory.fall_back(CONSTANTS::TRAJECTORY::fall_back_center));
+      m_trajectory.init_live_traj(m_fallback_traj);
+      m_action = CONSTANTS::AUTO_ACTIONS::CROSS_LINE_P;
+      break;
+
+    case CONSTANTS::AUTO_ACTIONS::PATH_4:
+      m_fallback_traj = m_trajectory.generate_live_traj(
+          m_trajectory.fall_back(CONSTANTS::TRAJECTORY::fall_back_center));
+      m_trajectory.init_live_traj(m_fallback_traj);
+      m_action = CONSTANTS::AUTO_ACTIONS::CROSS_LINE_P;
+      break;
 
       //default:
       

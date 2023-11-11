@@ -36,7 +36,11 @@ enum class AUTO_ACTIONS{
   DOCK_CROSS_LINE,
   CORAL_SCORE, 
   SCORE_INTAKE,
-  STOWED
+  STOWED,
+  PATH_1,
+  PATH_2,
+  PATH_3,
+  PATH_4
 };
 constexpr double FF_SPEED = 0.05;
   constexpr int XBOX_PORT = 0;
