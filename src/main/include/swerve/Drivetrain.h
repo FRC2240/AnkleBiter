@@ -153,7 +153,7 @@ public:
 
     // Use this one when you want to use the gryo (i.e, snapping to a static
     // point)
-    bool face_direction(units::degree_t tgt);
+    bool face_direction(units::degree_t tgt); 
 
     void faceClosest(units::meters_per_second_t const &dx,
                      units::meters_per_second_t const &dy,
@@ -174,5 +174,5 @@ public:
     frc::PIDController turn_coral_pid{ pid_coral_coef.p, pid_coral_coef.i, pid_coral_coef.d };
     AHRS navx{ frc::SPI::Port::kMXP };
 };
-
+    
 #endif

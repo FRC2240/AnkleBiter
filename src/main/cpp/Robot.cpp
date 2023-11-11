@@ -15,6 +15,7 @@ void Robot::RobotInit()
   m_chooser.AddOption(kScoreCrossLineBalance, kScoreCrossLineBalance);
   m_chooser.AddOption(kScoreDock, kScoreDock);
   m_chooser.AddOption(kScoreCoral, kScoreCoral);
+  //m_chooser.AddOption(kScoreIntake, kScoreIntake);
   // m_chooser.AddOption(kScoreMidDoNothing, kScoreMidDoNothing);
   // m_chooser.AddOption(kScoreMidCrossLine, kScoreMidCrossLine);
   frc::SmartDashboard::PutData("Auto Modes", &m_chooser);
@@ -106,7 +107,7 @@ void Robot::AutonomousPeriodic()
   switch(m_action)
     {
     case CONSTANTS::AUTO_ACTIONS::NOTHING:
-      // std::cout << "Do nothing! \n";
+       std::cout << "Do nothing! \n";
       break;
 
     case CONSTANTS::AUTO_ACTIONS::BALANCE:
@@ -180,6 +181,28 @@ void Robot::AutonomousPeriodic()
           // m_score_timer.Reset();
         }
       break;
+     case CONSTANTS::AUTO_ACTIONS::SCORE_INTAKE:
+              m_drivetrain.drive(1_mps, 0_mps, units::radians_per_second_t{0}, false);
+
+      m_arm.move(CONSTANTS::ARM::INTAKE_POS);
+      m_roller.spin(CONSTANTS::ARM::INTAKE_VEL); // No idea if this is the
+                                                 // right value/sign or not
+      frc::SmartDashboard::PutBoolean("loaded", m_roller.is_loaded());
+      if(m_roller.is_loaded())
+        {
+                        m_drivetrain.drive(0_mps, 0_mps, units::radians_per_second_t{0}, false);
+          std::cout << "here\n";
+          m_auto_sequence->pop_front();
+          m_action = m_auto_sequence->front();
+        }
+      break;
+      case CONSTANTS::AUTO_ACTIONS::STOWED:
+      m_arm.move(CONSTANTS::ARM::STORE_POS);
+      m_roller.spin(CONSTANTS::FF_SPEED);
+      frc::SmartDashboard::PutString("state", "stowed");
+
+      break;
+
     case CONSTANTS::AUTO_ACTIONS::CORAL_SCORE:
 frc::SmartDashboard::PutNumber("navx", m_drivetrain.getAngle().value());
 is_driver_controled = !frc::SmartDashboard::GetBoolean("dbg/snap_zero", false);
@@ -199,9 +222,10 @@ is_driver_controled = !frc::SmartDashboard::GetBoolean("dbg/snap_zero", false);
           // }
           // A .value() on an std::option<units::degree_t> returns a
           // units::degree_t, not a double
-            if (coral.value().value() < 1 && coral.value().value() > -1){
-                        std::cout << "The Robot is ready to move forward \n" ; 
-            }
+            if (coral.value().value() < 2 && coral.value().value() > -2){
+                        m_auto_sequence->pop_front();
+          m_action = m_auto_sequence->front();
+                       }
         }
         else
         {
@@ -265,7 +289,7 @@ void Robot::TeleopPeriodic()
 {
   /*frc::SmartDashboard::PutNumber("navx", m_drivetrain.getAngle().value());
 is_driver_controled = !frc::SmartDashboard::GetBoolean("dbg/snap_zero", false);
-/*  
+
   if(frc::SmartDashboard::GetBoolean("dbg/snap_zero", false) == true)
     {
       is_driver_controled = false;
