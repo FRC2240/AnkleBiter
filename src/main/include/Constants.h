@@ -40,7 +40,11 @@ enum class AUTO_ACTIONS{
   PATH_1,
   PATH_2,
   PATH_3,
-  PATH_4
+  PATH_4,
+  PATH_1_P,
+  PATH_2_P,
+  PATH_3_P,
+  PATH_4_P
 };
 constexpr double FF_SPEED = 0.05;
   constexpr int XBOX_PORT = 0;

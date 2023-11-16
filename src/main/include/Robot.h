@@ -55,6 +55,12 @@ private:
   //const std::string kScoreMidDoNothing = "Score mid, do nothing";
   //const std::string kScoreMidCrossLine = "Score mid, cross line";
 
+    pathplanner::PathPlannerTrajectory m_path_trajectory0;
+    pathplanner::PathPlannerTrajectory m_path_trajectory1;
+    pathplanner::PathPlannerTrajectory m_path_trajectory2;
+    pathplanner::PathPlannerTrajectory m_path_trajectory3;
+    pathplanner::PathPlannerTrajectory m_path_trajectory4;
+
 // Score balance 
 // Score Cross line balance
 std::list <CONSTANTS::AUTO_ACTIONS> score_balance {
@@ -91,16 +97,20 @@ std::list<CONSTANTS::AUTO_ACTIONS> score_do_nothing {
   std::list<CONSTANTS::AUTO_ACTIONS> score_coral {
     CONSTANTS::AUTO_ACTIONS::SCORE,
     CONSTANTS::AUTO_ACTIONS::PATH_1,
+    CONSTANTS::AUTO_ACTIONS::PATH_1_P,
     CONSTANTS::AUTO_ACTIONS::CORAL_SCORE,
     CONSTANTS::AUTO_ACTIONS::SCORE_INTAKE,
     CONSTANTS::AUTO_ACTIONS::STOWED,
     CONSTANTS::AUTO_ACTIONS::PATH_2,
+    CONSTANTS::AUTO_ACTIONS::PATH_2_P,
     CONSTANTS::AUTO_ACTIONS::SCORE,
     CONSTANTS::AUTO_ACTIONS::PATH_3,
+    CONSTANTS::AUTO_ACTIONS::PATH_3_P,
     CONSTANTS::AUTO_ACTIONS::CORAL_SCORE,
     CONSTANTS::AUTO_ACTIONS::SCORE_INTAKE,
     CONSTANTS::AUTO_ACTIONS::STOWED,
     CONSTANTS::AUTO_ACTIONS::PATH_4,
+    CONSTANTS::AUTO_ACTIONS::PATH_4_P,
     CONSTANTS::AUTO_ACTIONS::SCORE,
     CONSTANTS::AUTO_ACTIONS::NOTHING,
   };

@@ -158,7 +158,7 @@ bool Trajectory::follow_live_traj(PathPlannerTrajectory traj)
         {
             sample = pathplanner::PathPlannerTrajectory::transformStateForAlliance(sample, frc::DriverStation::Alliance::kRed);
         }
-        //std::cout << sample.pose.X().value() << " " <<  sample.pose.Y().value() << " " << sample.holonomicRotation.Degrees().value() << "\n";
+        std::cout << sample.pose.X().value() << " " <<  sample.pose.Y().value() << " " << sample.holonomicRotation.Degrees().value() << "\n";
 
         m_odometry->getField2dObject("Traj")->SetPose({sample.pose.X(), sample.pose.Y(), sample.holonomicRotation});
 

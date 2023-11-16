@@ -48,6 +48,7 @@ void Robot::RobotPeriodic() {}
  */
 void Robot::AutonomousInit()
 {
+  m_drivetrain.zero_yaw();
 #ifndef CFG_NO_DRIVEBASE
   m_odometry.update();
   // m_drivetrain.flip();
@@ -102,6 +103,7 @@ void Robot::AutonomousPeriodic()
 {
   m_odometry.update();
   m_odometry.putField2d();
+  frc::SmartDashboard::PutNumber("navx", m_drivetrain.getAngle().value());
 
   m_action = m_auto_sequence->front();
   switch(m_action)
@@ -159,8 +161,8 @@ void Robot::AutonomousPeriodic()
           m_auto_sequence->pop_front();
           m_action = m_auto_sequence->front();
           m_roller.spin(0);
-          // m_score_timer.Stop();
-          // m_score_timer.Reset();
+          m_score_timer.Stop();
+          m_score_timer.Reset();
         }
       break;
 
@@ -197,10 +199,87 @@ void Robot::AutonomousPeriodic()
         }
       break;
       case CONSTANTS::AUTO_ACTIONS::STOWED:
-      m_arm.move(CONSTANTS::ARM::STORE_POS);
-      m_roller.spin(CONSTANTS::FF_SPEED);
-      frc::SmartDashboard::PutString("state", "stowed");
+        m_arm.move(CONSTANTS::ARM::STORE_POS);
+        m_roller.spin(CONSTANTS::FF_SPEED);
+        frc::SmartDashboard::PutString("state", "stowed");
+        m_auto_sequence->pop_front();
+        m_action = m_auto_sequence->front();
+      break;
 
+      case CONSTANTS::AUTO_ACTIONS::PATH_1:
+      {    
+        std::cout << "Path 1\n";    
+        m_path_trajectory1 = m_trajectory.extract("3_cube_path_1", units::meters_per_second_t {1.77186}, units::meters_per_second_squared_t {3.54373});        
+        m_trajectory.init_live_traj(m_path_trajectory1);        
+        m_auto_sequence->pop_front();
+        m_action = m_auto_sequence->front();
+      break;
+      }
+    
+    case CONSTANTS::AUTO_ACTIONS::PATH_2:
+    {
+      std::cout << "Path 2\n"; 
+      m_path_trajectory2 = m_trajectory.extract("3_cube_path_2", units::meters_per_second_t {1.77186}, units::meters_per_second_squared_t {3.54373});
+      m_trajectory.init_live_traj(m_path_trajectory2);
+      m_auto_sequence->pop_front();
+      m_action = m_auto_sequence->front();
+      break;
+    }
+
+    case CONSTANTS::AUTO_ACTIONS::PATH_3:
+    {
+      std::cout << "Path 3\n"; 
+      m_path_trajectory3 = m_trajectory.extract("3_cube_path_3", units::meters_per_second_t {1.77186}, units::meters_per_second_squared_t {3.54373});
+      m_trajectory.init_live_traj(m_path_trajectory3);
+      m_auto_sequence->pop_front();
+      m_action = m_auto_sequence->front();
+      break;
+    }
+
+    case CONSTANTS::AUTO_ACTIONS::PATH_4:
+    {
+      std::cout << "Path 4\n"; 
+      m_path_trajectory4 = m_trajectory.extract("3_cube_path_4", units::meters_per_second_t {1.77186}, units::meters_per_second_squared_t {3.54373});
+      m_trajectory.init_live_traj(m_path_trajectory4);
+      m_auto_sequence->pop_front();
+      m_action = m_auto_sequence->front();
+      break;
+    }
+
+    case CONSTANTS::AUTO_ACTIONS::PATH_1_P:
+    std::cout << "Path periodic 1\n"; 
+     if (m_trajectory.follow_live_traj(m_path_trajectory1))
+        {
+          m_auto_sequence->pop_front();
+          m_action = m_auto_sequence->front();
+        }
+      break;
+
+    case CONSTANTS::AUTO_ACTIONS::PATH_2_P:
+    std::cout << "Path periodic 2\n"; 
+     if (m_trajectory.follow_live_traj(m_path_trajectory2))
+        {
+          m_auto_sequence->pop_front();
+          m_action = m_auto_sequence->front();
+        }
+      break;
+
+    case CONSTANTS::AUTO_ACTIONS::PATH_3_P:
+    std::cout << "Path periodic 3\n"; 
+     if (m_trajectory.follow_live_traj(m_path_trajectory3))
+        {
+          m_auto_sequence->pop_front();
+          m_action = m_auto_sequence->front();
+        }
+      break;
+
+    case CONSTANTS::AUTO_ACTIONS::PATH_4_P:
+    std::cout << "Path periodic 4\n"; 
+     if (m_trajectory.follow_live_traj(m_path_trajectory4))
+        {
+          m_auto_sequence->pop_front();
+          m_action = m_auto_sequence->front();
+        }
       break;
 
     case CONSTANTS::AUTO_ACTIONS::CORAL_SCORE:
@@ -232,34 +311,6 @@ void Robot::AutonomousPeriodic()
           m_drivetrain.stop();
         }
         break;
-
-    case CONSTANTS::AUTO_ACTIONS::PATH_1:
-      m_fallback_traj = m_trajectory.generate_live_traj(
-          m_trajectory.fall_back(CONSTANTS::TRAJECTORY::fall_back_center));
-      m_trajectory.init_live_traj(m_fallback_traj);
-      m_action = CONSTANTS::AUTO_ACTIONS::CROSS_LINE_P;
-      break;
-    
-    case CONSTANTS::AUTO_ACTIONS::PATH_2:
-      m_fallback_traj = m_trajectory.generate_live_traj(
-          m_trajectory.fall_back(CONSTANTS::TRAJECTORY::fall_back_center));
-      m_trajectory.init_live_traj(m_fallback_traj);
-      m_action = CONSTANTS::AUTO_ACTIONS::CROSS_LINE_P;
-      break;
-
-    case CONSTANTS::AUTO_ACTIONS::PATH_3:
-      m_fallback_traj = m_trajectory.generate_live_traj(
-          m_trajectory.fall_back(CONSTANTS::TRAJECTORY::fall_back_center));
-      m_trajectory.init_live_traj(m_fallback_traj);
-      m_action = CONSTANTS::AUTO_ACTIONS::CROSS_LINE_P;
-      break;
-
-    case CONSTANTS::AUTO_ACTIONS::PATH_4:
-      m_fallback_traj = m_trajectory.generate_live_traj(
-          m_trajectory.fall_back(CONSTANTS::TRAJECTORY::fall_back_center));
-      m_trajectory.init_live_traj(m_fallback_traj);
-      m_action = CONSTANTS::AUTO_ACTIONS::CROSS_LINE_P;
-      break;
 
       //default:
       
