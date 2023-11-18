@@ -151,6 +151,7 @@ void Robot::AutonomousPeriodic()
 
     case CONSTANTS::AUTO_ACTIONS::SCORE:
       // std::cout << "Score! \n";
+      m_score_timer.Start();
       if(m_score_timer.Get() <= 0.5_s)
         {
           m_roller.spin(-0.35);
@@ -207,9 +208,9 @@ void Robot::AutonomousPeriodic()
       break;
 
       case CONSTANTS::AUTO_ACTIONS::PATH_1:
-      {    
+      { 
         std::cout << "Path 1\n";    
-        m_path_trajectory1 = m_trajectory.extract("3_cube_path_1", units::meters_per_second_t {1.77186}, units::meters_per_second_squared_t {3.54373});        
+        m_path_trajectory1 = m_trajectory.extract("3_cube_path_1", units::meters_per_second_t {6}, units::meters_per_second_squared_t {7});        
         m_trajectory.init_live_traj(m_path_trajectory1);        
         m_auto_sequence->pop_front();
         m_action = m_auto_sequence->front();
@@ -219,7 +220,7 @@ void Robot::AutonomousPeriodic()
     case CONSTANTS::AUTO_ACTIONS::PATH_2:
     {
       std::cout << "Path 2\n"; 
-      m_path_trajectory2 = m_trajectory.extract("3_cube_path_2", units::meters_per_second_t {1.77186}, units::meters_per_second_squared_t {3.54373});
+      m_path_trajectory2 = m_trajectory.extract("3_cube_path_2", units::meters_per_second_t {6}, units::meters_per_second_squared_t {7});
       m_trajectory.init_live_traj(m_path_trajectory2);
       m_auto_sequence->pop_front();
       m_action = m_auto_sequence->front();
@@ -229,7 +230,7 @@ void Robot::AutonomousPeriodic()
     case CONSTANTS::AUTO_ACTIONS::PATH_3:
     {
       std::cout << "Path 3\n"; 
-      m_path_trajectory3 = m_trajectory.extract("3_cube_path_3", units::meters_per_second_t {1.77186}, units::meters_per_second_squared_t {3.54373});
+      m_path_trajectory3 = m_trajectory.extract("3_cube_path_3", units::meters_per_second_t {6}, units::meters_per_second_squared_t {7});
       m_trajectory.init_live_traj(m_path_trajectory3);
       m_auto_sequence->pop_front();
       m_action = m_auto_sequence->front();
@@ -239,7 +240,7 @@ void Robot::AutonomousPeriodic()
     case CONSTANTS::AUTO_ACTIONS::PATH_4:
     {
       std::cout << "Path 4\n"; 
-      m_path_trajectory4 = m_trajectory.extract("3_cube_path_4", units::meters_per_second_t {1.77186}, units::meters_per_second_squared_t {3.54373});
+      m_path_trajectory4 = m_trajectory.extract("3_cube_path_4", units::meters_per_second_t {6}, units::meters_per_second_squared_t {7});
       m_trajectory.init_live_traj(m_path_trajectory4);
       m_auto_sequence->pop_front();
       m_action = m_auto_sequence->front();
@@ -279,6 +280,22 @@ void Robot::AutonomousPeriodic()
         {
           m_auto_sequence->pop_front();
           m_action = m_auto_sequence->front();
+        }
+      break;
+
+      case CONSTANTS::AUTO_ACTIONS::FACE_ZERO:
+        m_score_timer.Start();
+      if(m_score_timer.Get() <= 1_s)
+        {
+          m_drivetrain.faceDirection(units::velocity::meters_per_second_t {0}, 
+          units::velocity::meters_per_second_t {0}, units::angle::degree_t {0},true);
+        }
+      else
+        {
+          m_auto_sequence->pop_front();
+          m_action = m_auto_sequence->front();
+          m_score_timer.Stop();
+          m_score_timer.Reset();
         }
       break;
 

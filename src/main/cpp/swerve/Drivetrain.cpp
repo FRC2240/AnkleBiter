@@ -304,15 +304,32 @@ bool Drivetrain::human_player_snap()
       return false;
     }
 }
-void Drivetrain::faceDirection(
-    units::meters_per_second_t const &dx, units::meters_per_second_t const &dy,
-    units::degree_t const &theta, bool const &field_relative,
-    double const &rot_p, units::degrees_per_second_t const &max_rot_speed)
+void Drivetrain::faceDirection(units::meters_per_second_t const &dx,
+                               units::meters_per_second_t const &dy,
+                               units::degree_t const &theta,
+                               bool const &field_relative,
+                               double const &rot_p,
+                               units::degrees_per_second_t const &max_rot_speed)
 {
-  turn_pid.SetSetpoint(theta.value());
-  double p_rotation = turn_pid.Calculate(getAngle().value());
-  drive(dx, dy, units::degrees_per_second_t{ -p_rotation }, field_relative);
+  int error_theta = (theta + getAngle()).to<int>() % 360; // Get difference between old and new angle;
+                                                          // gets the equivalent value between -360 and 360
+
+  if (error_theta < -180)
+    error_theta += 360; // Ensure angle is between -180 and 360
+  if (error_theta > 180)
+    error_theta -= 360; // Optimizes angle if over 180
+//  if (std::abs(error_theta) < 5)
+  //  error_theta = 0; // Dead-zone to prevent oscillation
+
+  double p_rotation = error_theta * rot_p; // Modifies error_theta in order to get a faster turning speed
+
+/*  if (std::abs(p_rotation) > max_rot_speed.value())
+    p_rotation = max_rot_speed.value() * ((p_rotation > 0) ? 1 : -1); // Constrains turn speed
+*/
+  // p_rotation is negated since the robot actually turns ccw, not cw
+  drive(dx, dy, units::degrees_per_second_t{-p_rotation}, field_relative);
 }
+
 
 bool Drivetrain::face_direction(units::degree_t tgt, double feedback_device)
 {
