@@ -11,6 +11,9 @@
 #include "subsystems/ExampleSubsystem.h"
 #include "subsystems/Arm.h"
 #include "commands/Intake.h"
+#include "swerve/Drivetrain.h"
+#include "swerve/Odometry.h"
+#include "swerve/Trajectory.h"
 
 /**
  * This class is where the bulk of the robot should be declared.  Since
@@ -19,21 +22,25 @@
  * scheduler calls).  Instead, the structure of the robot (including subsystems,
  * commands, and trigger mappings) should be declared here.
  */
-class RobotContainer {
- public:
+class RobotContainer
+{
+public:
   RobotContainer();
 
   frc2::CommandPtr GetAutonomousCommand();
 
- private:
-  // Replace with CommandPS4Controller or CommandJoystick if needed
+  Drivetrain m_drivetrain;
+  Odometry m_odometry{&m_drivetrain};
+  void ConfigureBindings();
+
   frc2::CommandXboxController m_driverController{
       CONSTANTS::XBOX_PORT};
+
+private:
+  // Replace with CommandPS4Controller or CommandJoystick if needed
 
   // The robot's subsystems are defined here...
   ExampleSubsystem m_subsystem;
   Arm m_arm;
   Intake m_intake;
-
-  void ConfigureBindings();
 };

@@ -12,21 +12,19 @@
 #include <frc2/command/SubsystemBase.h>
 #include <rev/CANSparkMax.h>
 #include "Constants.h"
-#include <TimeOfFlight.h>
+// #include <TimeOfFlight.h>
 #include <units/length.h>
 #include <frc/smartdashboard/SmartDashboard.h>
 #include <frc2/command/FunctionalCommand.h>
 #include <frc2/command/RunCommand.h>
 #include <frc2/command/RepeatCommand.h>
+#include <frc/DigitalInput.h>
 
-
-class Arm : public frc2::SubsystemBase {
- public:
+class Arm : public frc2::SubsystemBase
+{
+public:
   Arm();
 
-  /**
-   * Will be called periodically whenever the CommandScheduler runs.
-   */
   void Periodic() override;
 
   void move(double setpoint);
@@ -45,27 +43,23 @@ class Arm : public frc2::SubsystemBase {
 
   frc2::CommandPtr move_mid_command();
 
-
- private:
-   rev::CANSparkMax m_left_arm_motor {CONSTANTS::ARM::LEFT_MOTOR_ID, rev::CANSparkMaxLowLevel::MotorType::kBrushless};
-  rev::CANSparkMax m_right_arm_motor {CONSTANTS::ARM::RIGHT_MOTOR_ID, rev::CANSparkMaxLowLevel::MotorType::kBrushless};
-
+private:
+  frc::DigitalInput m_break_beam{9};
+  rev::CANSparkMax m_left_arm_motor{CONSTANTS::ARM::LEFT_MOTOR_ID, rev::CANSparkMaxLowLevel::MotorType::kBrushless};
+  rev::CANSparkMax m_right_arm_motor{CONSTANTS::ARM::RIGHT_MOTOR_ID, rev::CANSparkMaxLowLevel::MotorType::kBrushless};
 
   rev::SparkMaxPIDController m_arm_pid = m_left_arm_motor.GetPIDController();
 
   rev::SparkMaxAbsoluteEncoder m_arm_encoder = m_left_arm_motor.GetAbsoluteEncoder(rev::SparkMaxAbsoluteEncoder::Type::kDutyCycle);
 
-
   CONSTANTS::PidCoeff m_arm_coeff = {2, 0, 0, 0, 0, -1.0, 1.0};
 
+  // frc::TimeOfFlight m_tof_sensor {CONSTANTS::ROLLER::TOF_CAN};
 
-    frc::TimeOfFlight m_tof_sensor {CONSTANTS::ROLLER::TOF_CAN};
+  rev::CANSparkMax m_left_roller_motor{CONSTANTS::ROLLER::LEFT_MOTOR_ID, rev::CANSparkMaxLowLevel::MotorType::kBrushless};
+  rev::CANSparkMax m_right_roller_motor{CONSTANTS::ROLLER::RIGHT_MOTOR_ID, rev::CANSparkMaxLowLevel::MotorType::kBrushless};
 
-    rev::CANSparkMax m_left_roller_motor {CONSTANTS::ROLLER::LEFT_MOTOR_ID, rev::CANSparkMaxLowLevel::MotorType::kBrushless};
-    rev::CANSparkMax m_right_roller_motor {CONSTANTS::ROLLER::RIGHT_MOTOR_ID, rev::CANSparkMaxLowLevel::MotorType::kBrushless};
-    
-    rev::SparkMaxPIDController m_roller_pid = m_left_roller_motor.GetPIDController();
-    
-    rev::SparkMaxRelativeEncoder m_roller_encoder = m_left_roller_motor.GetEncoder();
+  rev::SparkMaxPIDController m_roller_pid = m_left_roller_motor.GetPIDController();
 
+  rev::SparkMaxRelativeEncoder m_roller_encoder = m_left_roller_motor.GetEncoder();
 };

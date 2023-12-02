@@ -16,7 +16,8 @@ void Robot::RobotInit() {}
  * <p> This runs after the mode specific periodic functions, but before
  * LiveWindow and SmartDashboard integrated updating.
  */
-void Robot::RobotPeriodic() {
+void Robot::RobotPeriodic()
+{
   frc2::CommandScheduler::GetInstance().Run();
 }
 
@@ -33,30 +34,60 @@ void Robot::DisabledPeriodic() {}
  * This autonomous runs the autonomous command selected by your {@link
  * RobotContainer} class.
  */
-void Robot::AutonomousInit() {
+void Robot::AutonomousInit()
+{
   m_autonomousCommand = m_container.GetAutonomousCommand();
 
-  if (m_autonomousCommand) {
+  if (m_autonomousCommand)
+  {
     m_autonomousCommand->Schedule();
   }
 }
 
 void Robot::AutonomousPeriodic() {}
 
-void Robot::TeleopInit() {
+void Robot::TeleopInit()
+{
   // This makes sure that the autonomous stops running when
   // teleop starts running. If you want the autonomous to
   // continue until interrupted by another command, remove
   // this line or comment it out.
-  if (m_autonomousCommand) {
+  if (m_autonomousCommand)
+  {
     m_autonomousCommand->Cancel();
   }
+}
+void Robot::swerveDrive(bool const &field_relative)
+{
+  m_container.m_drivetrain.print_angle();
+
+  if (m_container.m_driverController.GetStartButtonReleased())
+  {
+    m_container.m_drivetrain.zero_yaw();
+  }
+
+  frc::SmartDashboard::PutNumber("navx", m_container.m_drivetrain.getAngle().value());
+
+  const units::meters_per_second_t left_right{-frc::ApplyDeadband(m_container.m_driverController.GetLeftX(), 0.1) * 2 * CONSTANTS::DRIVE::TELEOP_MAX_SPEED};
+  frc::SmartDashboard::PutNumber("desired lr translation", left_right.value());
+  const units::meters_per_second_t front_back{frc::ApplyDeadband(m_container.m_driverController.GetLeftY(), 0.1) * 2 * CONSTANTS::DRIVE::TELEOP_MAX_SPEED};
+  frc::SmartDashboard::PutNumber("desired fb translation", front_back.value());
+  auto const rot = frc::ApplyDeadband(m_container.m_driverController.GetRightX(), .1) * 4 * m_container.m_drivetrain.TELEOP_MAX_ANGULAR_SPEED;
+  frc::SmartDashboard::PutNumber("desired rotation", rot.value());
+  m_container.m_drivetrain.drive(front_back, -left_right, rot, field_relative);
+
+  // frc::SmartDashboard::PutNumber("Gyro: ", m_drivetrain.getAngle().value());
+  // frc::SmartDashboard::PutNumber("front/back: ", front_back.value());
+  // frc::SmartDashboard::PutNumber("left/right: ", left_right.value());
 }
 
 /**
  * This function is called periodically during operator control.
  */
-void Robot::TeleopPeriodic() {}
+void Robot::TeleopPeriodic()
+{
+  Robot::swerveDrive(true);
+}
 
 /**
  * This function is called periodically during test mode.
@@ -74,7 +105,8 @@ void Robot::SimulationInit() {}
 void Robot::SimulationPeriodic() {}
 
 #ifndef RUNNING_FRC_TESTS
-int main() {
+int main()
+{
   return frc::StartRobot<Robot>();
 }
 #endif

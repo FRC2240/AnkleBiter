@@ -24,9 +24,10 @@ SwerveModule::SwerveModule(int const &driver_adr, int const &turner_adr, int con
       cancoder{cancoder_adr, CAN_BUS_NAME}
 {
 
+    fmt::println("Driver version: {}", driver.GetVersionMajor().GetValue());
     std::cout << "Driver Pro: " << driver.GetIsProLicensed().GetValue() << "\n";
     std::cout << "Turner Pro: " << turner.GetIsProLicensed().GetValue() << "\n";
-    std::cout << "Cancoder Pro: " << cancoder.GetPosition().GetValue().value() << "\n";
+    std::cout << "Cancoder Pro" << cancoder.GetIsProLicensed().GetValue() << "\n";
     std::cout << "Cancoder pro msg: " << cancoder.GetIsProLicensed().IsAllGood();
     std::cout << "Swerve constuctor start for " << driver.GetDescription() << std::endl;
     turner_addr = turner_adr;
