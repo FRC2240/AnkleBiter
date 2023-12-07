@@ -44,7 +44,7 @@ Trajectory::Trajectory(Drivetrain *drivetrain, Odometry *odometry)
             PIDConstants(5.0, 0.0, 0.0), // Translation PID constants
             PIDConstants(5.0, 0.0, 0.0), // Rotation PID constants
             4.5_mps,                     // Max module speed, in m/s
-            0.4_m,                       // Drive base radius in meters. Distance from robot center to furthest module.
+            10_in,                       // Drive base radius in meters. Distance from robot center to furthest module.
             ReplanningConfig()           // Default path replanning config. See the API for the options here),
             ),
         this);
@@ -52,15 +52,25 @@ Trajectory::Trajectory(Drivetrain *drivetrain, Odometry *odometry)
 
 frc2::CommandPtr Trajectory::make_relative_line_path(units::meter_t x, units::meter_t y, frc::Rotation2d rot)
 {
+    std::cout << "here";
+    auto pose = m_odometry->getPose();
+    fmt::println("Current Pose: {},{},{}", pose.X().value(), pose.Y().value(), pose.Rotation().Degrees().value());
     std::vector<frc::Pose2d> points{
-        m_odometry->getPose(), // First point is always where you are
-        frc::Pose2d(x, y, rot)};
+        pose, // First point is always where you are
+        frc::Pose2d(pose.X() + x, pose.Y() + y, rot)};
+
+    fmt::println("Target Pose: {},{},{}", (pose.X() + x).value(), (pose.Y() + y).value(), rot.Degrees().value());
 
     std::vector<frc::Translation2d>
         bezierPoints = PathPlannerPath::bezierFromPoses(points);
     auto path = std::make_shared<PathPlannerPath>(bezierPoints, DEFAULT_CONSTRAINTS, GoalEndState(0.0_mps, rot));
 
-    return AutoBuilder::followPathWithEvents(path);
+    return AutoBuilder::followPathWithEvents(path)
+        .AlongWith(frc2::cmd::Run(
+            [pose, x, y, rot] {
+
+            },
+            {}));
 }
 
 frc2::CommandPtr Trajectory::make_absolute_line_path(frc::Pose2d target_pose)

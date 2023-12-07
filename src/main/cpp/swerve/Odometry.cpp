@@ -12,10 +12,10 @@
 // the wheels to form an "X" instead of diamond while turning.
 // It's wrong but it works, no touchy.
 
-frc::SwerveDriveKinematics<4> kinematics{frc::Translation2d{12.25_in, 12.25_in},
-                                         frc::Translation2d{12.25_in, -12.25_in},
-                                         frc::Translation2d{-12.25_in, 12.25_in},
-                                         frc::Translation2d{-12.5_in, -12.5_in}};
+frc::SwerveDriveKinematics<4> kinematics{frc::Translation2d{7.33_in, 7.33_in},
+                                         frc::Translation2d{7.33_in, -7.33_in},
+                                         frc::Translation2d{-7.33_in, 7.33_in},
+                                         frc::Translation2d{-7.33_in, -7.33_in}};
 
 static frc::SwerveDriveOdometry<4> odometry{
     kinematics,
@@ -45,7 +45,7 @@ void Odometry::update()
     frc::Pose2d const pose = odometry.Update(m_drivetrain->getCCWHeading(),
                                              m_drivetrain->getModulePositions());
     // if constexpr (CONSTANTS::DEBUGGING)
-    // frc::SmartDashboard::PutString("Odometry: ", fmt::format("Pose X: {}, Y: {}, Z (Degrees): {}\n", pose.X().value(), pose.Y().value(), pose.Rotation().Degrees().value()));
+    frc::SmartDashboard::PutString("Odometry: ", fmt::format("Pose X: {}, Y: {}, Z (Degrees): {}\n", pose.X().value(), pose.Y().value(), pose.Rotation().Degrees().value()));
 }
 
 frc::Pose2d Odometry::getPose() { return odometry.GetPose(); }

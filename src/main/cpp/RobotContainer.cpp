@@ -30,10 +30,17 @@ void RobotContainer::ConfigureBindings()
   // pressed, cancelling on release.
   // m_driverController.B().WhileTrue(m_subsystem.ExampleMethodCommand());
 
+  m_driverController.X().OnTrue(m_trajectory.make_absolute_line_path(frc::Pose2d(0_m, 0_m, frc::Rotation2d(0_rad))));
   m_driverController.RightTrigger().ToggleOnTrue(m_arm.move_low_command().AndThen(m_arm.extake_command(CONSTANTS::TARGET::LOW).WithTimeout(0.5_s)));
   // m_driverController.RightTrigger().OnTrue(m_arm.move_mid_command().AndThen(m_arm.extake_command(CONSTANTS::TARGET::MID).WithTimeout(0.5_s)));
   // m_driverController.RightBumper().OnTrue(m_arm.move_low_command().AndThen(m_arm.extake_command(CONSTANTS::TARGET::LOW).WithTimeout(0.5_s)));
   m_driverController.LeftBumper().ToggleOnTrue(Intake(&m_arm).ToPtr());
+  // m_driverController.B().OnTrue(frc2::InstantCommand([this]{frc::DriverStation::}))
+  m_driverController.Start().OnTrue(
+      frc2::InstantCommand([this]
+                           { m_odometry.resetPosition(frc::Pose2d(0_m, 0_m, frc::Rotation2d(0_rad)), frc::Rotation2d(0_rad)); },
+                           {})
+          .ToPtr());
   m_arm.SetDefaultCommand(m_arm.stow_command());
 }
 

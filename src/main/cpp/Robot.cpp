@@ -48,6 +48,7 @@ void Robot::AutonomousPeriodic() {}
 
 void Robot::TeleopInit()
 {
+  m_container.m_odometry.putField2d();
   // This makes sure that the autonomous stops running when
   // teleop starts running. If you want the autonomous to
   // continue until interrupted by another command, remove
@@ -74,7 +75,7 @@ void Robot::swerveDrive(bool const &field_relative)
   frc::SmartDashboard::PutNumber("desired fb translation", front_back.value());
   auto const rot = frc::ApplyDeadband(m_container.m_driverController.GetRightX(), .1) * 4 * m_container.m_drivetrain.TELEOP_MAX_ANGULAR_SPEED;
   frc::SmartDashboard::PutNumber("desired rotation", rot.value());
-  m_container.m_drivetrain.drive(front_back, -left_right, rot, field_relative);
+  m_container.m_drivetrain.drive(front_back, -left_right, -rot, field_relative);
 
   // frc::SmartDashboard::PutNumber("Gyro: ", m_drivetrain.getAngle().value());
   // frc::SmartDashboard::PutNumber("front/back: ", front_back.value());
@@ -86,6 +87,7 @@ void Robot::swerveDrive(bool const &field_relative)
  */
 void Robot::TeleopPeriodic()
 {
+  m_container.m_odometry.update();
   Robot::swerveDrive(true);
 }
 

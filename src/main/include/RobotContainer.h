@@ -31,6 +31,7 @@ public:
 
   Drivetrain m_drivetrain;
   Odometry m_odometry{&m_drivetrain};
+  Trajectory m_trajectory{&m_drivetrain, &m_odometry};
   void ConfigureBindings();
 
   frc2::CommandXboxController m_driverController{
