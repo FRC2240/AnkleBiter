@@ -52,25 +52,24 @@ Trajectory::Trajectory(Drivetrain *drivetrain, Odometry *odometry)
 
 frc2::CommandPtr Trajectory::make_relative_line_path(units::meter_t x, units::meter_t y, frc::Rotation2d rot)
 {
-    std::cout << "here";
-    auto pose = m_odometry->getPose();
-    fmt::println("Current Pose: {},{},{}", pose.X().value(), pose.Y().value(), pose.Rotation().Degrees().value());
-    std::vector<frc::Pose2d> points{
-        pose, // First point is always where you are
-        frc::Pose2d(pose.X() + x, pose.Y() + y, rot)};
+    return AutoBuilder::followPathWithEvents(
+               [this, x, y, rot] -> std::shared_ptr<PathPlannerPath>
+               {
+                   std::cout << "here";
+                   auto pose = m_odometry->getPose();
+                   fmt::println("Current Pose: {},{},{}", pose.X().value(), pose.Y().value(), pose.Rotation().Degrees().value());
+                   std::vector<frc::Pose2d> points{
+                       pose, // First point is always where you are
+                       frc::Pose2d(x, y, rot)};
+                   frc::SmartDashboard::PutString("here?", "here");
 
-    fmt::println("Target Pose: {},{},{}", (pose.X() + x).value(), (pose.Y() + y).value(), rot.Degrees().value());
+                   fmt::println("Target Pose: {},{},{}", (pose.X() + x).value(), (pose.Y() + y).value(), rot.Degrees().value());
 
-    std::vector<frc::Translation2d>
-        bezierPoints = PathPlannerPath::bezierFromPoses(points);
-    auto path = std::make_shared<PathPlannerPath>(bezierPoints, DEFAULT_CONSTRAINTS, GoalEndState(0.0_mps, rot));
-
-    return AutoBuilder::followPathWithEvents(path)
-        .AlongWith(frc2::cmd::Run(
-            [pose, x, y, rot] {
-
-            },
-            {}));
+                   std::vector<frc::Translation2d>
+                       bezierPoints = PathPlannerPath::bezierFromPoses(points);
+                   return std::make_shared<PathPlannerPath>(bezierPoints, DEFAULT_CONSTRAINTS, GoalEndState(0.0_mps, rot));
+               }())
+        .AndThen(frc2::PrintCommand("here").ToPtr());
 }
 
 frc2::CommandPtr Trajectory::make_absolute_line_path(frc::Pose2d target_pose)
