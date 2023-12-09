@@ -8,6 +8,7 @@
 #include <pathplanner/lib/path/PathPlannerTrajectory.h>
 #include <pathplanner/lib/path/PathPoint.h>
 #include <pathplanner/lib/auto/AutoBuilder.h>
+#include <pathplanner/lib/commands/PathPlannerAuto.h>
 
 #include <frc/geometry/Pose2d.h>
 #include <frc/kinematics/ChassisSpeeds.h>
