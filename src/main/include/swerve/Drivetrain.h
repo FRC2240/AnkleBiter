@@ -23,6 +23,11 @@
 class Drivetrain
 {
 public:
+    frc::SwerveDriveKinematics<4> kinematics{frc::Translation2d{7.33_in, 7.33_in},
+                                             frc::Translation2d{7.33_in, -7.33_in},
+                                             frc::Translation2d{-7.33_in, 7.33_in},
+                                             frc::Translation2d{-7.33_in, -7.33_in}};
+
     frc::BuiltInAccelerometer acc;
     Drivetrain();
 

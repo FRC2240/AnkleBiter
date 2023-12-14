@@ -14,6 +14,7 @@
 #include "swerve/Drivetrain.h"
 #include "swerve/Odometry.h"
 #include "swerve/Trajectory.h"
+#include "swerve/Vision.h"
 
 /**
  * This class is where the bulk of the robot should be declared.  Since
@@ -29,13 +30,13 @@ public:
 
   frc2::CommandPtr GetAutonomousCommand();
 
-  Drivetrain m_drivetrain;
-  Odometry m_odometry{&m_drivetrain};
-  Trajectory m_trajectory{&m_drivetrain, &m_odometry};
-  void ConfigureBindings();
-
   frc2::CommandXboxController m_driverController{
       CONSTANTS::XBOX_PORT};
+
+  Drivetrain m_drivetrain;
+  Odometry m_odometry{&m_drivetrain};
+  Trajectory m_trajectory{&m_drivetrain, &m_odometry, &m_driverController};
+  void ConfigureBindings();
 
 private:
   // Replace with CommandPS4Controller or CommandJoystick if needed

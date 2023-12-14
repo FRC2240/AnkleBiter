@@ -57,7 +57,6 @@ SwerveModule::SwerveModule(int const &driver_adr, int const &turner_adr, int con
     // driver_config.CurrentLimits.SupplyCurrentLimitEnable
     driver_config.MotorOutput.NeutralMode.value = driver_config.MotorOutput.NeutralMode.Brake;
     //  TODO: TUNING
-    driver_config.Feedback.RotorToSensorRatio = DRIVER_GEAR_RATIO; // FIXME
     driver.SetInverted(false);
     driver.GetConfigurator().Apply(driver_config);
 
@@ -144,6 +143,7 @@ void SwerveModule::setDesiredState(frc::SwerveModuleState const &desired_state)
     frc::SmartDashboard::PutNumber(driver.GetDescription() + "/vout", driver.GetMotorVoltage().GetValueAsDouble());
     frc::SmartDashboard::PutNumber(driver.GetDescription() + "/cyclemarker", (double)std::rand() / RAND_MAX);
     frc::SmartDashboard::PutNumber(driver.GetDescription() + "/turner.get()", turner.GetPosition().Refresh().GetValueAsDouble());
+    frc::SmartDashboard::PutNumber(driver.GetDescription() + "/driver rotations", driver.GetPosition().GetValueAsDouble());
     frc::SmartDashboard::PutNumber(driver.GetDescription() + "/getAngle().value()", getAngle().value());
     frc::SmartDashboard::PutNumber(driver.GetDescription() + "/cancoder.value().value()", cancoder.GetAbsolutePosition().GetValueAsDouble());
     frc::SmartDashboard::PutNumber(driver.GetDescription() + "/latency", cancoder.GetAbsolutePosition().GetTimestamp().GetLatency().convert<units::time::millisecond>().value());
@@ -155,7 +155,7 @@ void SwerveModule::setDesiredState(frc::SwerveModuleState const &desired_state)
 
 inline units::turns_per_second_t SwerveModule::bot_speed_to_wheel_speed(units::meters_per_second_t bot_speed)
 {
-    return units::turns_per_second_t{(bot_speed.value() / WHEEL_CIRCUMFERENCE.value()) * DRIVER_GEAR_RATIO};
+    return units::turns_per_second_t{(bot_speed.value() / WHEEL_CIRCUMFERENCE.value())};
 }
 
 inline units::meters_per_second_t SwerveModule::wheel_speed_to_bot_speed(units::turns_per_second_t wheel_speed)

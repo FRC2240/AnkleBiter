@@ -25,7 +25,8 @@ public:
   void TestPeriodic() override;
   void SimulationInit() override;
   void SimulationPeriodic() override;
-  void swerveDrive(bool const &field_relative);
+
+  [[depreciated("Use Trajectory::manual_drive instead")]] void swerveDrive(bool const &field_relative);
 
 private:
   // Have it empty by default so that if testing teleop it

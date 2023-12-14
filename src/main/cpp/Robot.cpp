@@ -58,6 +58,7 @@ void Robot::TeleopInit()
     m_autonomousCommand->Cancel();
   }
 }
+
 void Robot::swerveDrive(bool const &field_relative)
 {
   m_container.m_drivetrain.print_angle();
@@ -75,7 +76,7 @@ void Robot::swerveDrive(bool const &field_relative)
   frc::SmartDashboard::PutNumber("desired fb translation", front_back.value());
   auto const rot = frc::ApplyDeadband(m_container.m_driverController.GetRightX(), .1) * m_container.m_drivetrain.TELEOP_MAX_ANGULAR_SPEED;
   frc::SmartDashboard::PutNumber("desired rotation", rot.value());
-  // m_container.m_drivetrain.drive(front_back, -left_right, -rot, field_relative);
+  m_container.m_drivetrain.drive(front_back, -left_right, -rot, field_relative);
 
   // frc::SmartDashboard::PutNumber("Gyro: ", m_drivetrain.getAngle().value());
   // frc::SmartDashboard::PutNumber("front/back: ", front_back.value());
@@ -88,7 +89,6 @@ void Robot::swerveDrive(bool const &field_relative)
 void Robot::TeleopPeriodic()
 {
   m_container.m_odometry.update();
-  Robot::swerveDrive(true);
 }
 
 /**

@@ -31,7 +31,7 @@ void RobotContainer::ConfigureBindings()
   // m_driverController.B().WhileTrue(m_subsystem.ExampleMethodCommand());
 
   // m_driverController.X().ToggleOnTrue(m_trajectory.extract("slpineauto%")?);
-  m_driverController.X().ToggleOnTrue(m_trajectory.make_absolute_line_path(frc::Pose2d(1_m, 1_m, frc::Rotation2d(0_rad))));
+  m_driverController.X().ToggleOnTrue(m_trajectory.make_relative_line_path(1_m, 1_m, frc::Rotation2d(0_rad)));
   m_driverController.RightTrigger().ToggleOnTrue(m_arm.move_low_command().AndThen(m_arm.extake_command(CONSTANTS::TARGET::LOW).WithTimeout(0.5_s)));
   // m_driverController.RightTrigger().OnTrue(m_arm.move_mid_command().AndThen(m_arm.extake_command(CONSTANTS::TARGET::MID).WithTimeout(0.5_s)));
   // m_driverController.RightBumper().OnTrue(m_arm.move_low_command().AndThen(m_arm.extake_command(CONSTANTS::TARGET::LOW).WithTimeout(0.5_s)));
@@ -43,6 +43,7 @@ void RobotContainer::ConfigureBindings()
                            {})
           .ToPtr());
   m_arm.SetDefaultCommand(m_arm.stow_command());
+  m_trajectory.SetDefaultCommand(m_trajectory.manual_drive());
 }
 
 frc2::CommandPtr RobotContainer::GetAutonomousCommand()

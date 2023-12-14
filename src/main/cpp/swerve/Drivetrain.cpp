@@ -23,7 +23,6 @@ frc::SwerveDriveKinematics<4> kinematics{frc::Translation2d{12.25_in, -12.25_in}
                                          frc::Translation2d{-12.25_in, -12.25_in},
                                          frc::Translation2d{-12.25_in, 12.25_in}};
                                          */
-extern frc::SwerveDriveKinematics<4> kinematics;
 
 Drivetrain::Drivetrain()
 {

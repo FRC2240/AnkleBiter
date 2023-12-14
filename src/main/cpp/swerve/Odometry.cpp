@@ -12,20 +12,6 @@
 // the wheels to form an "X" instead of diamond while turning.
 // It's wrong but it works, no touchy.
 
-frc::SwerveDriveKinematics<4> kinematics{frc::Translation2d{7.33_in, 7.33_in},
-                                         frc::Translation2d{7.33_in, -7.33_in},
-                                         frc::Translation2d{-7.33_in, 7.33_in},
-                                         frc::Translation2d{-7.33_in, -7.33_in}};
-
-static frc::SwerveDriveOdometry<4> odometry{
-    kinematics,
-    frc::Rotation2d{0_deg},
-    wpi::array<frc::SwerveModulePosition, 4>{
-        frc::SwerveModulePosition{},
-        frc::SwerveModulePosition{},
-        frc::SwerveModulePosition{},
-        frc::SwerveModulePosition{}}};
-
 frc::Field2d field2d;
 
 /******************************************************************/
@@ -35,6 +21,7 @@ Odometry::Odometry(Drivetrain *drivetrain)
     : m_drivetrain{drivetrain}
 {
 }
+
 void Odometry::putField2d()
 {
     frc::SmartDashboard::PutData("Odometry Field", &field2d);
@@ -42,13 +29,13 @@ void Odometry::putField2d()
 
 void Odometry::update()
 {
-    frc::Pose2d const pose = odometry.Update(m_drivetrain->getCCWHeading(),
-                                             m_drivetrain->getModulePositions());
+    frc::Pose2d const pose = estimator.Update(m_drivetrain->getCCWHeading(),
+                                              m_drivetrain->getModulePositions());
     // if constexpr (CONSTANTS::DEBUGGING)
     frc::SmartDashboard::PutString("Odometry: ", fmt::format("Pose X: {}, Y: {}, Z (Degrees): {}\n", pose.X().value(), pose.Y().value(), pose.Rotation().Degrees().value()));
 }
 
-frc::Pose2d Odometry::getPose() { return odometry.GetPose(); }
+frc::Pose2d Odometry::getPose() { return estimator.GetEstimatedPosition(); }
 
 frc::ChassisSpeeds const Odometry::getFieldRelativeSpeeds()
 {
@@ -57,7 +44,7 @@ frc::ChassisSpeeds const Odometry::getFieldRelativeSpeeds()
     speed_timer.Start();
     static frc::Pose2d previous_pose{};
 
-    frc::Pose2d const current_pose = odometry.GetPose();
+    frc::Pose2d const current_pose = estimator.GetEstimatedPosition();
 
     frc::Pose2d const delta_pose = current_pose.RelativeTo(previous_pose);
 
@@ -68,7 +55,7 @@ frc::ChassisSpeeds const Odometry::getFieldRelativeSpeeds()
 
     units::degrees_per_second_t const rot{delta_pose.Rotation().Degrees() / time_elapsed};
 
-    previous_pose = odometry.GetPose(); // Set the previous_pose for the next time this loop is run
+    previous_pose = estimator.GetEstimatedPosition(); // Set the previous_pose for the next time this loop is run
 
     speed_timer.Reset(); // Time how long until next call
 
@@ -77,9 +64,9 @@ frc::ChassisSpeeds const Odometry::getFieldRelativeSpeeds()
 
 void Odometry::reset_position_from_vision(const frc::Pose2d &bot_pose)
 {
-    odometry.ResetPosition(m_drivetrain->getCCWHeading(),
-                           m_drivetrain->getModulePositions(),
-                           bot_pose);
+    estimator.ResetPosition(m_drivetrain->getCCWHeading(),
+                            m_drivetrain->getModulePositions(),
+                            bot_pose);
 }
 
 // void Odometry::reset_from_distance()
@@ -106,11 +93,27 @@ void Odometry::reset_position_from_vision(const frc::Pose2d &bot_pose)
 
 void Odometry::resetPosition(const frc::Pose2d &bot_pose, const frc::Rotation2d &gyro_angle)
 {
-    odometry.ResetPosition(gyro_angle, m_drivetrain->getModulePositions(), bot_pose);
+    estimator.ResetPosition(gyro_angle, m_drivetrain->getModulePositions(), bot_pose);
 }
 
 frc::FieldObject2d *Odometry::getField2dObject(std::string_view name)
 {
     return field2d.GetObject(name);
 }
+
+void Odometry::add_vision_measurment(const frc::Pose2d &pose)
+{
+    estimator.AddVisionMeasurement(pose, frc::Timer::GetFPGATimestamp());
+}
+
+void Odometry::update_from_vision()
+{
+    std::vector<double> results = m_limelight->GetNumberArray("botpose", std::vector<double>(6));
+    add_vision_measurment(
+        frc::Pose2d(
+            units::meter_t{results[0]},
+            units::meter_t{results[1]},
+            frc::Rotation2d(units::degree_t{results[3]})));
+}
+
 #endif

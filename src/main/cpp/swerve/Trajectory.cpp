@@ -20,8 +20,8 @@
 
 frc::Timer m_trajTimer;
 
-Trajectory::Trajectory(Drivetrain *drivetrain, Odometry *odometry)
-    : m_drivetrain{drivetrain}, m_odometry{odometry}
+Trajectory::Trajectory(Drivetrain *drivetrain, Odometry *odometry, frc::XboxController *stick)
+    : m_drivetrain{drivetrain}, m_odometry{odometry}, m_stick{stick}
 {
     AutoBuilder::configureHolonomic(
         [this]() -> frc::Pose2d
@@ -50,23 +50,49 @@ Trajectory::Trajectory(Drivetrain *drivetrain, Odometry *odometry)
         this);
 }
 
+frc2::CommandPtr Trajectory::manual_drive(bool field_relative)
+{
+    return frc2::cmd::Run(
+        [this, field_relative]
+        {
+            if (m_stick->GetStartButtonReleased())
+            {
+                m_drivetrain->zero_yaw();
+            }
+
+            const units::meters_per_second_t left_right{-frc::ApplyDeadband(m_stick->GetLeftX(), 0.1) * CONSTANTS::DRIVE::TELEOP_MAX_SPEED};
+            const units::meters_per_second_t front_back{frc::ApplyDeadband(m_stick->GetLeftY(), 0.1) * CONSTANTS::DRIVE::TELEOP_MAX_SPEED};
+            auto const rot = frc::ApplyDeadband(m_stick->GetRightX(), .1) * m_drivetrain->TELEOP_MAX_ANGULAR_SPEED;
+            m_drivetrain->drive(front_back, -left_right, -rot, field_relative);
+        },
+        {this});
+}
+
 frc2::CommandPtr Trajectory::make_relative_line_path(units::meter_t x, units::meter_t y, frc::Rotation2d rot)
 {
-    std::cout << "here";
-    auto pose = m_odometry->getPose();
-    fmt::println("Current Pose: {},{},{}", pose.X().value(), pose.Y().value(), pose.Rotation().Degrees().value());
-    std::vector<frc::Pose2d> points{
-        pose, // First point is always where you are
-        frc::Pose2d(x, y, rot)};
-    frc::SmartDashboard::PutString("here?", "here");
+    return frc2::cmd::DeferredProxy(
+               [this, x, y, rot]
+               {
+                   auto pose = m_odometry->getPose();
+                   fmt::println("Current Pose: {},{},{}", pose.X().value(), pose.Y().value(), pose.Rotation().Degrees().value());
+                   std::vector<frc::Pose2d> points{
+                       pose, // First point is always where you are
+                       frc::Pose2d(pose.X() + x, pose.Y() + y, rot)};
+                   frc::SmartDashboard::PutString("here?", "here");
 
-    fmt::println("Target Pose: {},{},{}", (pose.X() + x).value(), (pose.Y() + y).value(), rot.Degrees().value());
+                   fmt::println("Target Pose: {},{},{}", (pose.X() + x).value(), (pose.Y() + y).value(), rot.Degrees().value());
 
-    std::vector<frc::Translation2d>
-        bezierPoints = PathPlannerPath::bezierFromPoses(points);
-    auto path = std::make_shared<PathPlannerPath>(bezierPoints, DEFAULT_CONSTRAINTS, GoalEndState(0.0_mps, rot));
+                   std::vector<frc::Translation2d>
+                       bezierPoints = PathPlannerPath::bezierFromPoses(points);
+                   auto path = std::make_shared<PathPlannerPath>(bezierPoints, DEFAULT_CONSTRAINTS, GoalEndState(0.0_mps, rot));
 
-    return AutoBuilder::followPathWithEvents(path).AndThen(frc2::PrintCommand("here").ToPtr());
+                   return AutoBuilder::followPathWithEvents(path).AndThen(frc2::PrintCommand("here").ToPtr());
+               })
+        .AndThen(frc2::cmd::RunOnce(
+            [=, this]
+            {
+            auto pose = m_odometry->getPose();
+            fmt::println("Current Pose: {},{},{}", pose.X().value(), pose.Y().value(), pose.Rotation().Degrees().value()); }));
 }
 
 frc2::CommandPtr Trajectory::make_absolute_line_path(frc::Pose2d target_pose)
