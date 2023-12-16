@@ -8,6 +8,7 @@
 
 #include "commands/Autos.h"
 #include "commands/ExampleCommand.h"
+#include <pathplanner/lib/auto/NamedCommands.h>
 
 RobotContainer::RobotContainer()
 {
@@ -19,6 +20,9 @@ RobotContainer::RobotContainer()
 
 void RobotContainer::ConfigureBindings()
 {
+  NamedCommands::registerCommand("intake", Intake(&m_arm).ToPtr());
+  NamedCommands::registerCommand("score", m_arm.move_low_command().AndThen(m_arm.extake_command(CONSTANTS::TARGET::LOW).WithTimeout(0.5_s)));
+
   // Configure your trigger bindings here
 
   // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
