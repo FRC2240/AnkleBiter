@@ -376,4 +376,45 @@ void Drivetrain::manualVelocity(double const &velocity_ticks_per_100ms)
   back_left->manualVelocityContol(velocity_ticks_per_100ms);
   back_right->manualVelocityContol(velocity_ticks_per_100ms);
 }
+
+bool Drivetrain::face_direction(units::degree_t tgt, double feedback_device)
+{
+  turn_coral_pid.SetSetpoint(tgt.value());
+  double pid_out = turn_coral_pid.Calculate(feedback_device);
+  drive(0_mps, 0_mps, units::degrees_per_second_t{ pid_out }, false);
+  frc::SmartDashboard::PutNumber("PID out", pid_out);
+  frc::SmartDashboard::PutNumber("PID target", tgt.value());
+  frc::SmartDashboard::PutNumber("Current  rotation", feedback_device);
+
+  if((feedback_device >= turn_pid.GetSetpoint() - 1)
+     && (feedback_device <= turn_pid.GetSetpoint() + 1))
+  {
+    return true;
+  }
+  else
+  {
+    return false;
+  }
+}
+
+bool Drivetrain::face_direction(units::degree_t tgt)
+{
+  auto angle = get_absolute_angle().value();
+  turn_pid.SetSetpoint(tgt.value());
+  double pid_out = turn_pid.Calculate(angle);
+  frc::SmartDashboard::PutNumber("PID out", pid_out);
+  frc::SmartDashboard::PutNumber("PID target", tgt.value());
+  frc::SmartDashboard::PutNumber("Current rotation", angle);
+
+  drive(0_mps, 0_mps, units::degrees_per_second_t{ pid_out }, false);
+  if((angle >= turn_pid.GetSetpoint() - 5)
+     && (angle <= turn_pid.GetSetpoint() + 5))
+  {
+    return true;
+  }
+  else
+  {
+    return false;
+  }
+}
 #endif

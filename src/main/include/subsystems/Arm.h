@@ -19,6 +19,8 @@
 #include <frc2/command/RunCommand.h>
 #include <frc2/command/RepeatCommand.h>
 #include <frc/DigitalInput.h>
+#include "swerve/Odometry.h"
+#include "swerve/Drivetrain.h"
 
 class Arm : public frc2::SubsystemBase
 {
@@ -42,6 +44,8 @@ public:
   frc2::CommandPtr extake_command(CONSTANTS::TARGET tgt);
 
   frc2::CommandPtr move_mid_command();
+
+  frc2::CommandPtr coral_pickup(Odometry* odometry, Drivetrain* drivetrain);
 
 private:
   frc::DigitalInput m_break_beam{9};

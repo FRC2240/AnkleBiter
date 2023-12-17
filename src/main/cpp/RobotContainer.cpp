@@ -22,6 +22,7 @@ void RobotContainer::ConfigureBindings()
 {
   NamedCommands::registerCommand("intake", Intake(&m_arm).ToPtr());
   NamedCommands::registerCommand("score", m_arm.move_low_command().AndThen(m_arm.extake_command(CONSTANTS::TARGET::LOW).WithTimeout(0.5_s)));
+  NamedCommands::registerCommand("coral", m_arm.coral_pickup(&m_odometry, &m_drivetrain));
 
   // Configure your trigger bindings here
 

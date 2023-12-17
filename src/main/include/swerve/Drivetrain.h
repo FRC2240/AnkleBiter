@@ -16,6 +16,7 @@
 #include <AHRS.h>
 #include <frc/SPI.h>
 #include <frc/BuiltInAccelerometer.h>
+#include <frc/controller/PIDController.h>
 
 #include <iostream>
 #include <fmt/format.h>
@@ -147,8 +148,16 @@ public:
 
     void manualVelocity(double const &velocity_ticks_per_100ms);
 
+    bool face_direction(units::degree_t tgt, double feedback_device);
+
+    bool face_direction(units::degree_t tgt); 
+
 private:
     AHRS navx{frc::SPI::Port::kMXP};
+    CONSTANTS::PidCoeff pid_coef{ 6, 0.0, 0.0, 0.0, 0.0, -1, 1 };
+    frc::PIDController turn_pid{ pid_coef.p, pid_coef.i, pid_coef.d };
+    CONSTANTS::PidCoeff pid_coral_coef{ -6.0, 0.0, 0.0, 0.0, 0.0, -1, 1 };
+    frc::PIDController turn_coral_pid{ pid_coral_coef.p, pid_coral_coef.i, pid_coral_coef.d };
 };
 
 #endif

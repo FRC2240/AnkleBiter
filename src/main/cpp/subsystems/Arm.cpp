@@ -164,3 +164,28 @@ frc2::CommandPtr Arm::move_mid_command()
                {this})
         .ToPtr();
 }
+
+frc2::CommandPtr Arm::coral_pickup(Odometry* odometry, Drivetrain* drivetrain)
+{
+    return frc2::FunctionalCommand(
+        [this] {},
+        [this, odometry, drivetrain] {
+            auto coral = odometry -> get_coral();
+            drivetrain->face_direction(0_deg, coral.value().value());
+        },
+        [this] (bool interupted) {},
+        [this, odometry, drivetrain] {
+            auto coral = odometry -> get_coral();
+            if (coral){
+                return coral.value().value() < 2 && coral.value().value() > -2;
+            }
+        },
+        {this}
+        ).ToPtr().AndThen(Arm::move_low_command()).AndThen(frc2::RunCommand(
+            [this, drivetrain]{ 
+                drivetrain -> drive(1_mps, 0_mps, units::radians_per_second_t{0}, false);
+                }
+            ).ToPtr()).Until([this] -> bool {Arm::is_loaded();
+            });
+    
+}

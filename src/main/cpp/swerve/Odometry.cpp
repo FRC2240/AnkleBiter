@@ -116,4 +116,19 @@ void Odometry::update_from_vision()
             frc::Rotation2d(units::degree_t{results[3]})));
 }
 
+std::optional<units::degree_t> Odometry::get_coral()
+{
+  if(m_limelight->GetString("tclass", "ERROR") == "cube")
+    {
+      units::degree_t tx{ m_limelight->GetNumber("tx", 0.0) };
+      // Target is valid, return info
+      
+      return std::optional<units::degree_t>{ tx };
+    }
+  else
+    {
+      return std::nullopt;
+    }
+}
+
 #endif

@@ -58,5 +58,7 @@ public:
     void add_vision_measurment(const frc::Pose2d &pose);
 
     void update_from_vision();
+
+    std::optional<units::degree_t> get_coral();
 };
 #endif
