@@ -19,6 +19,14 @@ void Robot::RobotInit() {}
 void Robot::RobotPeriodic()
 {
   frc2::CommandScheduler::GetInstance().Run();
+
+  m_container.m_odometry.update();
+  if (m_container.m_odometry.get_dist_to_tgt() && m_container.m_odometry.get_dist_to_tgt().value().value() <= 100)
+  {
+
+    frc::SmartDashboard::PutNumber("dist", m_container.m_odometry.get_dist_to_tgt().value().value());
+    m_container.m_odometry.update_from_vision();
+  }
 }
 
 /**
@@ -88,7 +96,6 @@ void Robot::swerveDrive(bool const &field_relative)
  */
 void Robot::TeleopPeriodic()
 {
-  m_container.m_odometry.update();
 }
 
 /**

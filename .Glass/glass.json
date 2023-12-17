@@ -3,6 +3,9 @@
     "retained": {
       "SmartDashboard": {
         "open": true
+      },
+      "limelight-dev": {
+        "open": true
       }
     },
     "transitory": {

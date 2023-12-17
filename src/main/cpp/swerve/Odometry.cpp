@@ -104,11 +104,12 @@ frc::FieldObject2d *Odometry::getField2dObject(std::string_view name)
 void Odometry::add_vision_measurment(const frc::Pose2d &pose)
 {
     estimator.AddVisionMeasurement(pose, frc::Timer::GetFPGATimestamp());
+    auto newpose = getPose();
 }
 
 void Odometry::update_from_vision()
 {
-    std::vector<double> results = m_limelight->GetNumberArray("botpose", std::vector<double>(6));
+    auto results = m_limelight->GetNumberArray("botpose", std::vector<double>(6));
     add_vision_measurment(
         frc::Pose2d(
             units::meter_t{results[0]},
@@ -118,17 +119,30 @@ void Odometry::update_from_vision()
 
 std::optional<units::degree_t> Odometry::get_coral()
 {
-  if(m_limelight->GetString("tclass", "ERROR") == "cube")
+    if (m_limelight->GetString("tclass", "ERROR") == "cube")
     {
-      units::degree_t tx{ m_limelight->GetNumber("tx", 0.0) };
-      // Target is valid, return info
-      
-      return std::optional<units::degree_t>{ tx };
+        units::degree_t tx{m_limelight->GetNumber("tx", 0.0)};
+        // Target is valid, return info
+
+        return std::optional<units::degree_t>{tx};
     }
-  else
+    else
     {
-      return std::nullopt;
+        return std::nullopt;
     }
 }
 
+std::optional<units::meter_t> Odometry::get_dist_to_tgt()
+{
+    frc::SmartDashboard::PutBoolean("tv", m_limelight->GetBoolean("tv", 0));
+    if (m_limelight->GetNumber("tv", 0))
+    {
+        auto results = m_limelight->GetNumberArray("targetpose_robotspace", std::vector<double>(6));
+        return units::meter_t{(std::sqrt(std::pow(results[0], 0) + std::pow(results[1], 2)))};
+    }
+    else
+    {
+        return std::nullopt;
+    }
+}
 #endif

@@ -22,8 +22,9 @@ class Odometry
 {
 private:
     Drivetrain *m_drivetrain;
-    std::shared_ptr<nt::NetworkTable> m_limelight =
-        nt::NetworkTableInstance::GetDefault().GetTable("limelight");
+    std::shared_ptr<nt::NetworkTable> m_limelight = nt::NetworkTableInstance::GetDefault().GetTable("limelight-dev");
+    // std::shared_ptr<nt::NetworkTable> m_limelight =
+    // nt::NetworkTableInstance::GetDefault().GetTable("limelight-dev");?
 
 public:
     // static frc::SwerveDriveKinematics<4> *kinematics_ptr;
@@ -60,5 +61,7 @@ public:
     void update_from_vision();
 
     std::optional<units::degree_t> get_coral();
+
+    std::optional<units::meter_t> get_dist_to_tgt();
 };
 #endif
