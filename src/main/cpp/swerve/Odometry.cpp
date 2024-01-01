@@ -114,7 +114,7 @@ void Odometry::update_from_vision()
         frc::Pose2d(
             units::meter_t{results[0]},
             units::meter_t{results[1]},
-            frc::Rotation2d(units::degree_t{results[3]})));
+            frc::Rotation2d(units::degree_t{results[5]})));
 }
 
 std::optional<units::degree_t> Odometry::get_coral()

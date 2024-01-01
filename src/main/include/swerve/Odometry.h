@@ -22,7 +22,6 @@ class Odometry
 {
 private:
     Drivetrain *m_drivetrain;
-    std::shared_ptr<nt::NetworkTable> m_limelight = nt::NetworkTableInstance::GetDefault().GetTable("limelight-dev");
     // std::shared_ptr<nt::NetworkTable> m_limelight =
     // nt::NetworkTableInstance::GetDefault().GetTable("limelight-dev");?
 
@@ -31,6 +30,7 @@ public:
     Odometry(Drivetrain *drivetrain);
     void putField2d();
 
+    std::shared_ptr<nt::NetworkTable> m_limelight = nt::NetworkTableInstance::GetDefault().GetTable("limelight-dev");
     frc::SwerveDrivePoseEstimator<4> estimator{
         m_drivetrain->kinematics,
         frc::Rotation2d(m_drivetrain->getAngle()),

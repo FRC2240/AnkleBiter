@@ -96,6 +96,9 @@ void Robot::swerveDrive(bool const &field_relative)
  */
 void Robot::TeleopPeriodic()
 {
+  frc::SmartDashboard::PutNumber("gyro", m_container.m_drivetrain.get_absolute_angle().value());
+  frc::SmartDashboard::PutNumber("pose angle", m_container.m_odometry.getPose().Rotation().Degrees().value());
+  frc::SmartDashboard::PutNumber("ll ange", m_container.m_odometry.m_limelight->GetNumberArray("botpose", std::vector<double>(6))[6]);
 }
 
 /**
