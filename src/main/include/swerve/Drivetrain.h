@@ -64,10 +64,10 @@ public:
 
     // Max effective linear speed
     static constexpr units::meters_per_second_t ROBOT_MAX_SPEED = 14.533_fps;
-    static constexpr units::radians_per_second_t ROBOT_MAX_ANGULAR_SPEED{std::numbers::pi * 1.25};
+    static constexpr units::radians_per_second_t ROBOT_MAX_ANGULAR_SPEED{std::numbers::pi * 2.25};
 
     static constexpr units::meters_per_second_t TELEOP_MAX_SPEED = ROBOT_MAX_SPEED;
-    static constexpr units::radians_per_second_t TELEOP_MAX_ANGULAR_SPEED{std::numbers::pi * 1.25};
+    static constexpr units::radians_per_second_t TELEOP_MAX_ANGULAR_SPEED{std::numbers::pi * 2.25};
     static constexpr units::meters_per_second_t TRAJ_MAX_SPEED = ROBOT_MAX_SPEED;
     static constexpr units::acceleration::meters_per_second_squared_t TRAJ_MAX_ACCELERATION = TRAJ_MAX_SPEED / 0.5_s;
     static constexpr units::radians_per_second_t TRAJ_MAX_ANGULAR_SPEED = ROBOT_MAX_ANGULAR_SPEED;
@@ -150,14 +150,14 @@ public:
 
     bool face_direction(units::degree_t tgt, double feedback_device);
 
-    bool face_direction(units::degree_t tgt); 
+    bool face_direction(units::degree_t tgt);
 
 private:
     AHRS navx{frc::SPI::Port::kMXP};
-    CONSTANTS::PidCoeff pid_coef{ 6, 0.0, 0.0, 0.0, 0.0, -1, 1 };
-    frc::PIDController turn_pid{ pid_coef.p, pid_coef.i, pid_coef.d };
-    CONSTANTS::PidCoeff pid_coral_coef{ -6.0, 0.0, 0.0, 0.0, 0.0, -1, 1 };
-    frc::PIDController turn_coral_pid{ pid_coral_coef.p, pid_coral_coef.i, pid_coral_coef.d };
+    CONSTANTS::PidCoeff pid_coef{6, 0.0, 0.0, 0.0, 0.0, -1, 1};
+    frc::PIDController turn_pid{pid_coef.p, pid_coef.i, pid_coef.d};
+    CONSTANTS::PidCoeff pid_coral_coef{-6.0, 0.0, 0.0, 0.0, 0.0, -1, 1};
+    frc::PIDController turn_coral_pid{pid_coral_coef.p, pid_coral_coef.i, pid_coral_coef.d};
 };
 
 #endif

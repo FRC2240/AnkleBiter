@@ -45,7 +45,7 @@ public:
 
   frc2::CommandPtr move_mid_command();
 
-  frc2::CommandPtr coral_pickup(Odometry* odometry, Drivetrain* drivetrain);
+  frc2::CommandPtr coral_pickup(Odometry *odometry, Drivetrain *drivetrain);
 
 private:
   frc::DigitalInput m_break_beam{9};
@@ -65,5 +65,5 @@ private:
 
   rev::SparkMaxPIDController m_roller_pid = m_left_roller_motor.GetPIDController();
 
-  rev::SparkMaxRelativeEncoder m_roller_encoder = m_left_roller_motor.GetEncoder();
+  rev::SparkMaxRelativeEncoder m_roller_encoder = m_left_roller_motor.GetEncoder(rev::CANEncoder::EncoderType::kHallSensor, 42);
 };
