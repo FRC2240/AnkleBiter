@@ -12,14 +12,17 @@
 
 RobotContainer::RobotContainer()
 {
+  m_odometry.resetPosition(frc::Pose2d(1.6_m, 5_m, frc::Rotation2d(0_rad)), frc::Rotation2d(0_rad));
   // Initialize all of your commands and subsystems here
-
+  coral_auto = PathPlannerAuto("coral auto").ToPtr().Unwrap();
+  frc::SmartDashboard::PutData("Coral Auto", coral_auto.get());
   // Configure the button bindings
   ConfigureBindings();
 }
 
 void RobotContainer::ConfigureBindings()
 {
+  NamedCommands::registerCommand("hello", frc2::cmd::Print("Hello World!"));
   NamedCommands::registerCommand("intake", Intake(&m_arm).ToPtr());
   NamedCommands::registerCommand("score", m_arm.move_low_command().AndThen(m_arm.extake_command(CONSTANTS::TARGET::LOW).WithTimeout(0.5_s)));
   NamedCommands::registerCommand("coral", m_arm.coral_pickup(&m_odometry, &m_drivetrain));

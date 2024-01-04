@@ -42,6 +42,7 @@ private:
   // Replace with CommandPS4Controller or CommandJoystick if needed
 
   // The robot's subsystems are defined here...
+  std::unique_ptr<frc2::Command> coral_auto;
   ExampleSubsystem m_subsystem;
   Arm m_arm;
   Intake m_intake;

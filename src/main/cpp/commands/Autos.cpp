@@ -16,5 +16,5 @@ frc2::CommandPtr autos::ExampleAuto(ExampleSubsystem *subsystem)
 
 frc2::CommandPtr autos::coral(Trajectory *traj)
 {
-  return traj->extract("coral auto");
+  return frc2::PrintCommand("start coral").ToPtr().AndThen(traj->extract("coral auto").AndThen(frc2::PrintCommand("Coral sucsess").ToPtr()));
 }
